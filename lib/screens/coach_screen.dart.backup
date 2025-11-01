@@ -1,0 +1,528 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../state/app_state.dart';
+
+class CoachScreen extends StatefulWidget {
+  const CoachScreen({super.key});
+
+  @override
+  State<CoachScreen> createState() => _CoachScreenState();
+}
+
+class _CoachScreenState extends State<CoachScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _animController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.easeInOut),
+    );
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.easeOutBack),
+    );
+    _animController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  void _showExitDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(Icons.home_rounded, color: Colors.white, size: 24),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Go to Home?',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1565C0),
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'You can always come back to view your report or start a new assessment from the home screen.',
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade700,
+              height: 1.5,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Stay Here',
+                style: GoogleFonts.inter(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // Close dialog
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/home',
+                  (route) => false,
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF1565C0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
+              child: Text(
+                'Go Home',
+                style: GoogleFonts.inter(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _getMessage(double risk) {
+    if (risk < 0.4) {
+      return '🎉 Fantastic! Your handwriting shows great control and consistency. Keep up the excellent practice!';
+    } else if (risk < 0.7) {
+      return '💪 Good progress! Let\'s work on improving spacing and letter formation. You\'re on the right track!';
+    } else {
+      return '🤗 Don\'t worry! Every expert was once a beginner. With regular practice, we\'ll see amazing improvements together!';
+    }
+  }
+
+  List<Map<String, dynamic>> _getTips(double risk) {
+    if (risk < 0.4) {
+      return [
+        {'icon': Icons.check_circle_rounded, 'text': 'Maintain consistent practice sessions', 'color': Color(0xFF4CAF50)},
+        {'icon': Icons.school_rounded, 'text': 'Try creative writing exercises', 'color': Color(0xFF0288D1)},
+        {'icon': Icons.celebration_rounded, 'text': 'Share your progress with friends', 'color': Color(0xFFFF9800)},
+      ];
+    } else if (risk < 0.7) {
+      return [
+        {'icon': Icons.edit_rounded, 'text': 'Practice letter spacing exercises daily', 'color': Color(0xFF0288D1)},
+        {'icon': Icons.straighten_rounded, 'text': 'Use lined paper for better alignment', 'color': Color(0xFF1565C0)},
+        {'icon': Icons.timer_rounded, 'text': '15 minutes of focused writing daily', 'color': Color(0xFFFF9800)},
+      ];
+    } else {
+      return [
+        {'icon': Icons.draw_rounded, 'text': 'Start with tracing letters slowly', 'color': Color(0xFF1565C0)},
+        {'icon': Icons.grid_on_rounded, 'text': 'Use grid paper for better control', 'color': Color(0xFF0288D1)},
+        {'icon': Icons.favorite_rounded, 'text': 'Practice grip and posture exercises', 'color': Color(0xFFF44336)},
+      ];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final appState = Provider.of<AppState>(context);
+    final risk = appState.risk;
+    final message = _getMessage(risk);
+    final tips = _getTips(risk);
+
+    return WillPopScope(
+      onWillPop: () async {
+        _showExitDialog(context);
+        return false;
+      },
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFFE3F2FD),
+                Color(0xFFB3E5FC),
+                Color(0xFFE1F5FE),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                // Header
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.home_rounded, color: Color(0xFF1565C0)),
+                          onPressed: () => _showExitDialog(context),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
+                            ).createShader(bounds),
+                            child: Text(
+                              'HandyBot Coach',
+                              style: GoogleFonts.poppins(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 48),
+                    ],
+                  ),
+                ),
+
+                // Main Content
+                Expanded(
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(36),
+                        topRight: Radius.circular(36),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.12),
+                          blurRadius: 30,
+                          offset: const Offset(0, -8),
+                        ),
+                      ],
+                    ),
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          // HandyBot Avatar
+                          ScaleTransition(
+                            scale: _scaleAnimation,
+                            child: Container(
+                              padding: const EdgeInsets.all(28),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
+                                ),
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xFF1565C0).withOpacity(0.4),
+                                    blurRadius: 24,
+                                    spreadRadius: 4,
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                '🤖',
+                                style: TextStyle(fontSize: 72),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Message Card
+                          Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFFE3F2FD),
+                                  Color(0xFFBBDEFB),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xFF1565C0).withOpacity(0.1),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        '💬',
+                                        style: TextStyle(fontSize: 24),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      'HandyBot says:',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF1565C0),
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  message,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade800,
+                                    height: 1.6,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 32),
+
+                          // Tips Section
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.tips_and_updates_rounded, color: Colors.white, size: 20),
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                'Personalized Tips',
+                                style: GoogleFonts.inter(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF1565C0),
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Tip Cards
+                          ...tips.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final tip = entry.value;
+                            return TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0.0, end: 1.0),
+                              duration: Duration(milliseconds: 400 + (index * 100)),
+                              curve: Curves.easeOut,
+                              builder: (context, value, child) {
+                                return Opacity(
+                                  opacity: value,
+                                  child: Transform.translate(
+                                    offset: Offset(0, 20 * (1 - value)),
+                                    child: Container(
+                                      margin: const EdgeInsets.only(bottom: 12),
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: (tip['color'] as Color).withOpacity(0.08),
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(
+                                          color: (tip['color'] as Color).withOpacity(0.2),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              color: tip['color'] as Color,
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: Icon(
+                                              tip['icon'] as IconData,
+                                              color: Colors.white,
+                                              size: 22,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Expanded(
+                                            child: Text(
+                                              tip['text'] as String,
+                                              style: GoogleFonts.inter(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey.shade800,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          }).toList(),
+
+                          const SizedBox(height: 32),
+
+                          // Action Buttons
+                          TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.95, end: 1.0),
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeOut,
+                            builder: (context, value, child) {
+                              return Transform.scale(
+                                scale: value,
+                                child: Container(
+                                  height: 56,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
+                                    ),
+                                    borderRadius: BorderRadius.circular(18),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0xFF1565C0).withOpacity(0.5),
+                                        blurRadius: 20,
+                                        offset: const Offset(0, 10),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ElevatedButton(
+                                    onPressed: () => Navigator.pushNamed(context, '/upload'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      shadowColor: Colors.transparent,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.edit_rounded, color: Colors.white, size: 22),
+                                        const SizedBox(width: 12),
+                                        Text(
+                                          'Practice Now',
+                                          style: GoogleFonts.inter(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white,
+                                            letterSpacing: 0.5,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // Secondary Button - Go Home
+                          SizedBox(
+                            height: 56,
+                            child: OutlinedButton(
+                              onPressed: () => _showExitDialog(context),
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: Color(0xFF1565C0), width: 2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.home_rounded, color: Color(0xFF1565C0), size: 22),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    'Go to Home',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF1565C0),
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
