@@ -19,6 +19,7 @@ import 'screens/about_screen.dart';
 import 'screens/letter_tracing_game.dart';
 import 'screens/dot_join_game.dart';
 import 'screens/copy_word_game.dart';
+import 'utils/modern_theme.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -31,17 +32,25 @@ class App extends StatelessWidget {
         title: 'En-HanZ',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF1565C0)),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: ModernTheme.primaryBlue,
+            primary: ModernTheme.primaryBlue,
+            secondary: ModernTheme.secondaryPurple,
+          ),
+          scaffoldBackgroundColor: ModernTheme.backgroundLight,
           useMaterial3: true,
+          fontFamily: 'Inter',
         ),
         builder: (context, widget) {
           // Error handling to prevent red screen flashes
           ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
             return Container(
-              color: Color(0xFFE3F2FD),
+              decoration: BoxDecoration(
+                gradient: ModernTheme.backgroundGradient,
+              ),
               child: Center(
                 child: CircularProgressIndicator(
-                  color: Color(0xFF1565C0),
+                  color: ModernTheme.primaryBlue,
                 ),
               ),
             );

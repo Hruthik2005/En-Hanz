@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import '../models/app_settings.dart';
 import '../utils/app_strings.dart';
+import '../utils/modern_theme.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -14,7 +15,6 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   late String _selectedLanguage;
-  late bool _largeFontMode;
   late bool _voiceEnabled;
   late bool _notificationsEnabled;
 
@@ -23,7 +23,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
     final appState = Provider.of<AppState>(context, listen: false);
     _selectedLanguage = appState.settings.language;
-    _largeFontMode = appState.settings.largeFontMode;
     _voiceEnabled = appState.settings.voiceEnabled;
     _notificationsEnabled = appState.settings.notificationsEnabled;
   }
@@ -32,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final appState = Provider.of<AppState>(context, listen: false);
     final newSettings = AppSettings(
       language: _selectedLanguage,
-      largeFontMode: _largeFontMode,
+      largeFontMode: false, // Keep default value
       voiceEnabled: _voiceEnabled,
       notificationsEnabled: _notificationsEnabled,
     );
@@ -44,11 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFE3F2FD), Color(0xFFB3E5FC), Color(0xFFE1F5FE)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: ModernTheme.blueBackgroundGradient,
         ),
         child: SafeArea(
           child: Column(
@@ -58,25 +53,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  boxShadow: ModernTheme.elevation2(),
                 ),
                 child: Row(
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Color(0xFFE3F2FD),
+                        color: ModernTheme.primaryBlue.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
                         icon: Icon(
                           Icons.arrow_back_rounded,
-                          color: Color(0xFF1565C0),
+                          color: ModernTheme.primaryBlue,
                         ),
                         onPressed: () => Navigator.pop(context),
                       ),
@@ -91,14 +80,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             style: GoogleFonts.poppins(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1565C0),
+                              color: ModernTheme.primaryBlue,
                             ),
                           ),
                           Text(
                             'Customize your experience',
                             style: GoogleFonts.inter(
                               fontSize: 12,
-                              color: Colors.grey.shade600,
+                              color: ModernTheme.textMedium,
                             ),
                           ),
                         ],
@@ -106,7 +95,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Icon(
                       Icons.settings_rounded,
-                      color: Color(0xFF1565C0),
+                      color: ModernTheme.primaryBlue,
                       size: 28,
                     ),
                   ],
@@ -126,20 +115,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                       // Language Selector
                       _buildLanguageCard(),
-
-                      const SizedBox(height: 12),
-
-                      // Large Font Toggle
-                      _buildToggleCard(
-                        icon: Icons.text_fields_rounded,
-                        title: 'Large Font Mode',
-                        subtitle: 'Increase text size for better readability',
-                        value: _largeFontMode,
-                        onChanged: (value) {
-                          setState(() => _largeFontMode = value);
-                          _saveSettings();
-                        },
-                      ),
 
                       const SizedBox(height: 32),
 
@@ -185,7 +160,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         icon: Icons.delete_outline_rounded,
                         title: 'Clear All Data',
                         subtitle: 'Remove all assessment history',
-                        color: Colors.red,
+                        color: ModernTheme.dangerRed,
                         onTap: _showClearDataDialog,
                       ),
 
@@ -196,7 +171,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         icon: Icons.logout_rounded,
                         title: 'Start Fresh',
                         subtitle: 'Reset profile and begin again',
-                        color: Color(0xFF1565C0),
+                        color: ModernTheme.primaryBlue,
                         onTap: () {
                           Navigator.pushNamedAndRemoveUntil(
                             context,
@@ -225,11 +200,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           width: 4,
           height: 20,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+            gradient: ModernTheme.primaryGradient,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -239,7 +210,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: Colors.grey.shade800,
+            color: ModernTheme.textDark,
           ),
         ),
       ],
@@ -249,17 +220,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildLanguageCard() {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: ModernTheme.modernCard(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -268,10 +229,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
-                  ),
+                  gradient: ModernTheme.primaryGradient,
                   borderRadius: BorderRadius.circular(12),
+                  boxShadow: ModernTheme.coloredShadow(
+                    ModernTheme.primaryBlue,
+                    opacity: 0.3,
+                  ),
                 ),
                 child: Icon(
                   Icons.language_rounded,
@@ -289,14 +252,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       style: GoogleFonts.inter(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color: Colors.grey.shade800,
+                        color: ModernTheme.textDark,
                       ),
                     ),
                     Text(
                       'Choose your preferred language',
                       style: GoogleFonts.inter(
                         fontSize: 13,
-                        color: Colors.grey.shade600,
+                        color: ModernTheme.textMedium,
                       ),
                     ),
                   ],
@@ -320,7 +283,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         '${AppStrings.get('language_changed', lang)} $lang',
                         style: GoogleFonts.inter(),
                       ),
-                      backgroundColor: Color(0xFF1565C0),
+                      backgroundColor: ModernTheme.primaryBlue,
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -337,25 +300,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   decoration: BoxDecoration(
                     gradient: isSelected
-                        ? LinearGradient(
-                            colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
-                          )
+                        ? ModernTheme.primaryGradient
                         : null,
-                    color: isSelected ? null : Colors.grey.shade100,
+                    color: isSelected ? null : ModernTheme.hoverLight,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isSelected
-                          ? Color(0xFF1565C0)
-                          : Colors.grey.shade300,
+                          ? ModernTheme.primaryBlue
+                          : ModernTheme.borderLight,
                       width: 2,
                     ),
+                    boxShadow: isSelected
+                        ? ModernTheme.coloredShadow(
+                            ModernTheme.primaryBlue,
+                            opacity: 0.2,
+                          )
+                        : null,
                   ),
                   child: Text(
                     lang,
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: isSelected ? Colors.white : Colors.grey.shade700,
+                      color: isSelected ? Colors.white : ModernTheme.textMedium,
                     ),
                   ),
                 ),
@@ -376,30 +343,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: ModernTheme.modernCard(),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: value
-                  ? Color(0xFF1565C0).withValues(alpha: 0.1)
-                  : Colors.grey.shade100,
+                  ? ModernTheme.primaryBlue.withValues(alpha: 0.1)
+                  : ModernTheme.hoverLight,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
-              color: value ? Color(0xFF1565C0) : Colors.grey.shade400,
+              color: value ? ModernTheme.primaryBlue : ModernTheme.textLight,
               size: 24,
             ),
           ),
@@ -413,14 +370,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: Colors.grey.shade800,
+                    color: ModernTheme.textDark,
                   ),
                 ),
                 Text(
                   subtitle,
                   style: GoogleFonts.inter(
                     fontSize: 13,
-                    color: Colors.grey.shade600,
+                    color: ModernTheme.textMedium,
                   ),
                 ),
               ],
@@ -429,7 +386,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: Color(0xFF1565C0),
+            activeColor: ModernTheme.primaryBlue,
           ),
         ],
       ),
@@ -448,17 +405,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 15,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+        decoration: ModernTheme.modernCard(),
         child: Row(
           children: [
             Container(
@@ -479,14 +426,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: Colors.grey.shade800,
+                      color: ModernTheme.textDark,
                     ),
                   ),
                   Text(
                     subtitle,
                     style: GoogleFonts.inter(
                       fontSize: 13,
-                      color: Colors.grey.shade600,
+                      color: ModernTheme.textMedium,
                     ),
                   ),
                 ],
@@ -513,14 +460,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           style: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: Colors.red.shade700,
+            color: ModernTheme.dangerRed,
           ),
         ),
         content: Text(
           'This will permanently delete all your assessment history and progress. This action cannot be undone.',
           style: GoogleFonts.inter(
             fontSize: 14,
-            color: Colors.grey.shade700,
+            color: ModernTheme.textMedium,
             height: 1.5,
           ),
         ),
@@ -532,7 +479,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: GoogleFonts.inter(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                color: ModernTheme.textMedium,
               ),
             ),
           ),
@@ -548,7 +495,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       'All data cleared successfully',
                       style: GoogleFonts.inter(),
                     ),
-                    backgroundColor: Colors.red.shade700,
+                    backgroundColor: ModernTheme.dangerRed,
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -558,7 +505,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red.shade700,
+              backgroundColor: ModernTheme.dangerRed,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

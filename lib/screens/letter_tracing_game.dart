@@ -71,6 +71,33 @@ class _LetterTracingGameState extends State<LetterTracingGame> {
   }
 
   void _nextLetter() {
+    if (_accuracy == null) {
+      // Show warning if user didn't draw anything
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, color: Colors.white, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Please trace the letter before continuing!',
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.orange.shade700,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+    
     if (_currentLetterIndex < _letters.length - 1) {
       setState(() {
         _currentLetterIndex++;

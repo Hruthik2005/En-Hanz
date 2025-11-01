@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../utils/modern_theme.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -89,21 +90,13 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFE3F2FD), // Light blue
-              Color(0xFFB3E5FC), // Sky blue
-              Color(0xFFE1F5FE), // Cyan tint
-            ],
-          ),
+          gradient: ModernTheme.blueBackgroundGradient,
         ),
         child: SafeArea(
           child: Center(
             child: !_fontsLoaded
-                ? const CircularProgressIndicator(
-                    color: Color(0xFF1565C0),
+                ? CircularProgressIndicator(
+                    color: ModernTheme.primaryBlue,
                     strokeWidth: 3,
                   )
                 : AnimatedBuilder(
@@ -142,26 +135,15 @@ class _SplashScreenState extends State<SplashScreen>
                                         alpha: 0.95,
                                       ),
                                       borderRadius: BorderRadius.circular(16),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color(
-                                            0xFF1976D2,
-                                          ).withValues(alpha: 0.2),
-                                          blurRadius: 20,
-                                          offset: const Offset(0, 8),
-                                        ),
-                                      ],
+                                      boxShadow: ModernTheme.coloredShadow(
+                                        ModernTheme.primaryBlue,
+                                        opacity: 0.2,
+                                      ),
                                     ),
                                     child: ShaderMask(
                                       shaderCallback: (bounds) =>
-                                          LinearGradient(
-                                            colors: [
-                                              Color(0xFF1565C0), // Deep blue
-                                              Color(0xFF0288D1), // Vibrant blue
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                          ).createShader(bounds),
+                                          ModernTheme.primaryGradient
+                                              .createShader(bounds),
                                       child: Text(
                                         'En-HanZ',
                                         style: GoogleFonts.poppins(
@@ -178,7 +160,7 @@ class _SplashScreenState extends State<SplashScreen>
                                     'AI that understands your handwriting',
                                     style: GoogleFonts.inter(
                                       fontSize: 15,
-                                      color: Color(0xFF1565C0),
+                                      color: ModernTheme.primaryBlue,
                                       fontWeight: FontWeight.w500,
                                       letterSpacing: 0.3,
                                     ),
@@ -191,16 +173,15 @@ class _SplashScreenState extends State<SplashScreen>
                                       vertical: 6,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Color(
-                                        0xFF1976D2,
-                                      ).withValues(alpha: 0.15),
+                                      color: ModernTheme.primaryBlue
+                                          .withValues(alpha: 0.15),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
                                       'for early dysgraphia detection',
                                       style: GoogleFonts.inter(
                                         fontSize: 12,
-                                        color: Color(0xFF0D47A1),
+                                        color: ModernTheme.primaryBlue,
                                         fontWeight: FontWeight.w600,
                                         letterSpacing: 0.5,
                                       ),
@@ -263,13 +244,8 @@ class _AnimatedHelloText extends StatelessWidget {
                   child: Transform.scale(
                     scale: 0.5 + (charProgress * 0.5),
                     child: ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          Color(0xFF1565C0), // Deep blue
-                          Color(0xFF0288D1), // Vibrant blue
-                          Color(0xFF00ACC1), // Cyan
-                        ],
-                      ).createShader(bounds),
+                      shaderCallback: (bounds) =>
+                          ModernTheme.primaryGradient.createShader(bounds),
                       child: Text(
                         text[index],
                         style: GoogleFonts.dancingScript(
@@ -278,13 +254,10 @@ class _AnimatedHelloText extends StatelessWidget {
                           color: Colors.white,
                           height: 1.0,
                           letterSpacing: -2,
-                          shadows: [
-                            Shadow(
-                              color: Color(0xFF1976D2).withValues(alpha: 0.5),
-                              offset: const Offset(0, 6),
-                              blurRadius: 20,
-                            ),
-                          ],
+                          shadows: ModernTheme.coloredShadow(
+                            ModernTheme.primaryBlue,
+                            opacity: 0.5,
+                          ),
                         ),
                       ),
                     ),
@@ -344,16 +317,12 @@ class _PulsingDotsState extends State<_PulsingDots>
                 height: 12,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color(
-                    0xFF0288D1,
-                  ).withValues(alpha: 0.2 + opacity * 0.8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xFF1976D2).withValues(alpha: 0.5 * opacity),
-                      blurRadius: 12 + (opacity * 8),
-                      spreadRadius: 2 + (opacity * 2),
-                    ),
-                  ],
+                  color: ModernTheme.primaryBlue
+                      .withValues(alpha: 0.2 + opacity * 0.8),
+                  boxShadow: ModernTheme.coloredShadow(
+                    ModernTheme.primaryBlue,
+                    opacity: 0.5 * opacity,
+                  ),
                 ),
               ),
             );

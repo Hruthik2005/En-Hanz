@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import '../models/profile.dart';
 import '../utils/app_strings.dart';
+import '../utils/modern_theme.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -68,11 +69,7 @@ class _HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFE3F2FD), Color(0xFFB3E5FC), Color(0xFFE1F5FE)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            gradient: ModernTheme.blueBackgroundGradient,
           ),
           child: SafeArea(
             child: FadeTransition(
@@ -111,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen>
                         title: AppStrings.get('start_new_test', language),
                         subtitle: 'Begin fresh handwriting assessment',
                         emoji: '🧠',
-                        gradient: [Color(0xFF1565C0), Color(0xFF0288D1)],
+                        gradient: [ModernTheme.primaryBlue, ModernTheme.infoCyan],
                         onTap: () => Navigator.pushNamed(context, '/profile'),
                       ),
 
@@ -123,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen>
                           title: AppStrings.get('view_report', language),
                           subtitle: 'See your assessment results',
                           emoji: '📊',
-                          gradient: [Color(0xFF0288D1), Color(0xFF00ACC1)],
+                          gradient: [ModernTheme.infoCyan, ModernTheme.successGreen],
                           onTap: () => Navigator.pushNamed(context, '/results'),
                         ),
 
@@ -134,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen>
                         title: AppStrings.get('practice_zone', language),
                         subtitle: 'Fun games to improve writing',
                         emoji: '🎮',
-                        gradient: [Color(0xFF00ACC1), Color(0xFF00838F)],
+                        gradient: [ModernTheme.accentAmber, Color(0xFFF97316)],
                         onTap: () => Navigator.pushNamed(context, '/practice'),
                       ),
 
@@ -146,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen>
                           children: [
                             Icon(
                               Icons.history_rounded,
-                              color: Color(0xFF1565C0),
+                              color: ModernTheme.primaryBlue,
                               size: 20,
                             ),
                             const SizedBox(width: 8),
@@ -155,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen>
                               style: GoogleFonts.poppins(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.grey.shade800,
+                                color: ModernTheme.textDark,
                               ),
                             ),
                           ],
@@ -176,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen>
                         children: [
                           Icon(
                             Icons.grid_view_rounded,
-                            color: Color(0xFF1565C0),
+                            color: ModernTheme.primaryBlue,
                             size: 20,
                           ),
                           const SizedBox(width: 8),
@@ -185,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen>
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: Colors.grey.shade800,
+                              color: ModernTheme.textDark,
                             ),
                           ),
                         ],
@@ -200,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen>
                             child: _buildSmallActionCard(
                               icon: Icons.history_edu_rounded,
                               title: AppStrings.get('history', language),
-                              gradient: [Color(0xFF7E57C2), Color(0xFF9575CD)],
+                              gradient: [ModernTheme.primaryBlue, ModernTheme.secondaryPurple],
                               onTap: () =>
                                   Navigator.pushNamed(context, '/history'),
                             ),
@@ -210,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen>
                             child: _buildSmallActionCard(
                               icon: Icons.chat_bubble_rounded,
                               title: AppStrings.get('handybot', language),
-                              gradient: [Color(0xFF5E35B1), Color(0xFF7E57C2)],
+                              gradient: [ModernTheme.secondaryPurple, Color(0xFF9333EA)],
                               onTap: () =>
                                   Navigator.pushNamed(context, '/handybot'),
                             ),
@@ -226,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen>
                             child: _buildSmallActionCard(
                               icon: Icons.settings_rounded,
                               title: AppStrings.get('settings', language),
-                              gradient: [Color(0xFF9575CD), Color(0xFFB39DDB)],
+                              gradient: [ModernTheme.textMedium, ModernTheme.textLight],
                               onTap: () =>
                                   Navigator.pushNamed(context, '/settings'),
                             ),
@@ -236,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen>
                             child: _buildSmallActionCard(
                               icon: Icons.info_outline_rounded,
                               title: AppStrings.get('about', language),
-                              gradient: [Color(0xFFB39DDB), Color(0xFFCE93D8)],
+                              gradient: [ModernTheme.infoCyan, ModernTheme.primaryBlue],
                               onTap: () => Navigator.pushNamed(context, '/about'),
                             ),
                           ),
@@ -254,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen>
                               style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF1565C0),
+                                color: ModernTheme.primaryBlue,
                                 letterSpacing: 1.2,
                               ),
                             ),
@@ -263,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen>
                               'AI-Powered Dysgraphia Detection',
                               style: GoogleFonts.inter(
                                 fontSize: 12,
-                                color: Colors.grey.shade600,
+                                color: ModernTheme.textMedium,
                               ),
                             ),
                           ],
@@ -305,17 +302,12 @@ class _HomeScreenState extends State<HomeScreen>
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
-              ),
+              gradient: ModernTheme.primaryGradient,
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xFF1565C0).withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  spreadRadius: 2,
-                ),
-              ],
+              boxShadow: ModernTheme.coloredShadow(
+                ModernTheme.primaryBlue,
+                opacity: 0.3,
+              ),
             ),
             child: Center(
               child: Text(
@@ -337,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen>
                   'Welcome back!',
                   style: GoogleFonts.inter(
                     fontSize: 13,
-                    color: Colors.grey.shade600,
+                    color: ModernTheme.textMedium,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -347,7 +339,7 @@ class _HomeScreenState extends State<HomeScreen>
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: Colors.grey.shade800,
+                    color: ModernTheme.textDark,
                   ),
                 ),
                 if (age > 0)
@@ -355,13 +347,13 @@ class _HomeScreenState extends State<HomeScreen>
                     'Age: $age years',
                     style: GoogleFonts.inter(
                       fontSize: 13,
-                      color: Colors.grey.shade600,
+                      color: ModernTheme.textMedium,
                     ),
                   ),
               ],
             ),
           ),
-          Icon(Icons.waving_hand, color: Colors.amber.shade600, size: 28),
+          Icon(Icons.waving_hand, color: ModernTheme.accentAmber, size: 28),
         ],
       ),
     );
@@ -377,17 +369,9 @@ class _HomeScreenState extends State<HomeScreen>
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
-        ),
+        gradient: ModernTheme.resultsGradient,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xFF1565C0).withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        boxShadow: ModernTheme.elevation3(),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -491,20 +475,17 @@ class _HomeScreenState extends State<HomeScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color(0xFFFFF3E0),
-            Color(0xFFFFE0B2),
+            ModernTheme.accentAmber.withValues(alpha: 0.1),
+            ModernTheme.accentAmber.withValues(alpha: 0.15),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xFFFF9800).withValues(alpha: 0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: ModernTheme.coloredShadow(
+          ModernTheme.accentAmber,
+          opacity: 0.2,
+        ),
       ),
       child: Row(
         children: [
@@ -513,18 +494,15 @@ class _HomeScreenState extends State<HomeScreen>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color(0xFFFF9800),
-                  Color(0xFFFFA726),
+                  ModernTheme.accentAmber,
+                  ModernTheme.accentAmberDark,
                 ],
               ),
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xFFFF9800).withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  spreadRadius: 2,
-                ),
-              ],
+              boxShadow: ModernTheme.coloredShadow(
+                ModernTheme.accentAmber,
+                opacity: 0.3,
+              ),
             ),
             child: Icon(
               Icons.auto_awesome_rounded,
@@ -542,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen>
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFFE65100),
+                    color: ModernTheme.accentAmberDark,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -552,7 +530,7 @@ class _HomeScreenState extends State<HomeScreen>
                   style: GoogleFonts.inter(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF6D4C41),
+                    color: ModernTheme.textDark,
                     height: 1.4,
                   ),
                 ),
@@ -580,13 +558,10 @@ class _HomeScreenState extends State<HomeScreen>
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: gradient),
           borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: gradient[0].withValues(alpha: 0.4),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          boxShadow: ModernTheme.coloredShadow(
+            gradient[0],
+            opacity: 0.4,
+          ),
         ),
         child: Row(
           children: [
@@ -647,13 +622,10 @@ class _HomeScreenState extends State<HomeScreen>
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: gradient),
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: gradient[0].withValues(alpha: 0.3),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          boxShadow: ModernTheme.coloredShadow(
+            gradient[0],
+            opacity: 0.3,
+          ),
         ),
         child: Column(
           children: [

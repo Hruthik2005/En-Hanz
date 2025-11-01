@@ -25,6 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     'Visual impairment': false,
     'None': false,
   };
+  bool _showValidationError = false;
 
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
@@ -189,7 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               label: 'Child Name',
                               icon: Icons.person_outline,
                               validator: (v) => (v == null || v.trim().isEmpty)
-                                  ? 'Enter name'
+                                  ? '⚠️ Please enter the child\'s name'
                                   : null,
                             ),
                             const SizedBox(height: 16),
@@ -342,6 +343,42 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   setState(() => _handedness = v ?? 'Right'),
                             ),
                             const SizedBox(height: 30),
+                            
+                            // Validation Error Banner
+                            if (_showValidationError)
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 16),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade50,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.red.shade300,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline_rounded,
+                                      color: Colors.red.shade700,
+                                      size: 24,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        'Please enter the child\'s name to continue',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.red.shade700,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            
                             TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0.95, end: 1.0),
                               duration: const Duration(milliseconds: 200),
@@ -371,9 +408,58 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        if (!_formKey.currentState!.validate()) {
+                                        // Explicit check for empty name
+                                        if (_nameCtrl.text.trim().isEmpty) {
+                                          // Show validation error banner
+                                          setState(() {
+                                            _showValidationError = true;
+                                          });
+                                          
+                                          // Trigger form validation to show field error
+                                          _formKey.currentState?.validate();
+                                          
+                                          // Show error snackbar with more prominent styling
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Row(
+                                                children: [
+                                                  Icon(Icons.warning_amber_rounded, color: Colors.white, size: 24),
+                                                  const SizedBox(width: 12),
+                                                  Expanded(
+                                                    child: Text(
+                                                      'Please enter the child\'s name',
+                                                      style: GoogleFonts.inter(
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 15,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              backgroundColor: Colors.red.shade600,
+                                              behavior: SnackBarBehavior.floating,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              margin: const EdgeInsets.all(16),
+                                              duration: const Duration(seconds: 3),
+                                              action: SnackBarAction(
+                                                label: 'OK',
+                                                textColor: Colors.white,
+                                                onPressed: () {},
+                                              ),
+                                            ),
+                                          );
+                                          
+                                          // Don't proceed
                                           return;
                                         }
+                                        
+                                        // Clear validation error if name is provided
+                                        setState(() {
+                                          _showValidationError = false;
+                                        });
+                                        
                                         final profile = Profile(
                                           name: _nameCtrl.text.trim(),
                                           age: int.parse(_age),
@@ -462,6 +548,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         controller: controller,
         keyboardType: keyboardType,
         validator: validator,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         style: GoogleFonts.inter(
           fontSize: 16,
           color: Colors.grey.shade900,
@@ -490,7 +577,12 @@ class _ProfileScreenState extends State<ProfileScreen>
             horizontal: 16,
             vertical: 20,
           ),
-          errorStyle: GoogleFonts.inter(fontSize: 12),
+          errorStyle: GoogleFonts.inter(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Colors.red.shade700,
+          ),
+          errorMaxLines: 2,
         ),
       ),
     );

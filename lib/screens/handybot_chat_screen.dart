@@ -25,6 +25,75 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
   void initState() {
     super.initState();
     _loadVoiceSettings();
+    _checkAssessmentCompletion();
+  }
+
+  void _checkAssessmentCompletion() {
+    final appState = Provider.of<AppState>(context, listen: false);
+    
+    // Check if user has completed the assessment
+    if (appState.risk == 0.0 || appState.iqScore == 0) {
+      // Show warning dialog
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: Row(
+              children: [
+                Icon(Icons.warning_amber_rounded, color: Colors.orange.shade700, size: 28),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Assessment Not Complete',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            content: Text(
+              'Please complete the handwriting assessment first before consulting with HandyBot.',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+                height: 1.5,
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close dialog
+                  Navigator.pop(context); // Go back to previous screen
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF1565C0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(
+                  'Go Back',
+                  style: GoogleFonts.inter(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      });
+      return;
+    }
+    
     _initialize();
   }
 

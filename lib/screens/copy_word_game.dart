@@ -58,10 +58,24 @@ class _CopyWordGameState extends State<CopyWordGame> {
     if (_drawnPoints.where((p) => p != null).length < 20) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('⚠️ Please write the word first!'),
+          content: Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, color: Colors.white, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  '⚠️ Please write the word first!',
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.orange,
+          backgroundColor: Colors.orange.shade700,
           behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
       return;

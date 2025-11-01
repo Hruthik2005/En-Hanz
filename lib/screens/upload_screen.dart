@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../state/app_state.dart';
+import '../utils/modern_theme.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -63,15 +64,7 @@ class _UploadScreenState extends State<UploadScreen>
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFFE3F2FD), // Light blue
-              Color(0xFFB3E5FC), // Sky blue
-              Color(0xFFE1F5FE), // Cyan tint
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: ModernTheme.blueBackgroundGradient,
         ),
         child: SafeArea(
           child: Column(
@@ -87,17 +80,12 @@ class _UploadScreenState extends State<UploadScreen>
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.1),
-                                blurRadius: 8,
-                              ),
-                            ],
+                            boxShadow: ModernTheme.elevation2(),
                           ),
                           child: IconButton(
                             icon: Icon(
                               Icons.arrow_back_rounded,
-                              color: Color(0xFF1565C0),
+                              color: ModernTheme.primaryBlue,
                             ),
                             onPressed: () => Navigator.pop(context),
                           ),
@@ -105,9 +93,8 @@ class _UploadScreenState extends State<UploadScreen>
                         Expanded(
                           child: Center(
                             child: ShaderMask(
-                              shaderCallback: (bounds) => LinearGradient(
-                                colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
-                              ).createShader(bounds),
+                              shaderCallback: (bounds) =>
+                                  ModernTheme.primaryGradient.createShader(bounds),
                               child: Text(
                                 'En-HanZ',
                                 style: GoogleFonts.poppins(
@@ -127,17 +114,12 @@ class _UploadScreenState extends State<UploadScreen>
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
-                        ),
+                        gradient: ModernTheme.primaryGradient,
                         shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xFF1565C0).withValues(alpha: 0.3),
-                            blurRadius: 20,
-                            spreadRadius: 2,
-                          ),
-                        ],
+                        boxShadow: ModernTheme.coloredShadow(
+                          ModernTheme.primaryBlue,
+                          opacity: 0.3,
+                        ),
                       ),
                       child: Icon(
                         Icons.upload_file_rounded,
@@ -169,7 +151,7 @@ class _UploadScreenState extends State<UploadScreen>
                         '✍️ Choose how to provide the sample',
                         style: GoogleFonts.inter(
                           fontSize: 13,
-                          color: Color(0xFF1565C0),
+                          color: ModernTheme.primaryBlue,
                           letterSpacing: 0.2,
                           fontWeight: FontWeight.w500,
                         ),
@@ -193,13 +175,7 @@ class _UploadScreenState extends State<UploadScreen>
                           topLeft: Radius.circular(36),
                           topRight: Radius.circular(36),
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.12),
-                            blurRadius: 30,
-                            offset: const Offset(0, -8),
-                          ),
-                        ],
+                        boxShadow: ModernTheme.elevation3(),
                       ),
                       child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
@@ -214,8 +190,8 @@ class _UploadScreenState extends State<UploadScreen>
                                     label: 'Camera',
                                     subtitle: 'Take Photo',
                                     gradient: [
-                                      Color(0xFF1565C0),
-                                      Color(0xFF0D47A1),
+                                      ModernTheme.primaryBlue,
+                                      ModernTheme.primaryBlueDark,
                                     ],
                                     onTap: () => _pickImage(ImageSource.camera),
                                   ),
@@ -227,8 +203,8 @@ class _UploadScreenState extends State<UploadScreen>
                                     label: 'Gallery',
                                     subtitle: 'Choose Image',
                                     gradient: [
-                                      Color(0xFF0288D1),
-                                      Color(0xFF0277BD),
+                                      ModernTheme.infoCyan,
+                                      ModernTheme.infoCyanDark,
                                     ],
                                     onTap: () =>
                                         _pickImage(ImageSource.gallery),
@@ -241,7 +217,7 @@ class _UploadScreenState extends State<UploadScreen>
                               icon: Icons.draw_rounded,
                               label: 'Draw with Stylus',
                               subtitle: 'Write directly on screen',
-                              gradient: [Color(0xFF00ACC1), Color(0xFF00838F)],
+                              gradient: [ModernTheme.accentAmber, ModernTheme.accentAmberDark],
                               onTap: () =>
                                   Navigator.pushNamed(context, '/drawing'),
                               isWide: true,
@@ -249,12 +225,43 @@ class _UploadScreenState extends State<UploadScreen>
                             const SizedBox(height: 24),
                             // Preview Section
                             Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: ModernTheme.primaryBlue.withValues(alpha: 0.05),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: ModernTheme.primaryBlue.withValues(alpha: 0.3),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.tips_and_updates_rounded,
+                                    color: ModernTheme.primaryBlue,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      'Tip: Use clear, well-lit photos with visible handwriting',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        color: ModernTheme.primaryBlue,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
                               height: 320,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade50,
+                                color: ModernTheme.backgroundLight,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                  color: Colors.grey.shade200,
+                                  color: ModernTheme.borderLight,
                                   width: 2,
                                 ),
                               ),
@@ -339,6 +346,41 @@ class _UploadScreenState extends State<UploadScreen>
 
                             const SizedBox(height: 24),
 
+                            // Warning message when no image
+                            if (_image == null)
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                margin: const EdgeInsets.only(bottom: 16),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.shade50,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.orange.shade300,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.warning_amber_rounded,
+                                      color: Colors.orange.shade700,
+                                      size: 24,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        'Please upload or capture a handwriting sample to continue',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 13,
+                                          color: Colors.orange.shade900,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
                             // Analyze Button
                             TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0.95, end: 1.0),
@@ -350,34 +392,32 @@ class _UploadScreenState extends State<UploadScreen>
                                   child: Container(
                                     height: 56,
                                     decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xFF1565C0),
-                                          Color(0xFF0288D1),
-                                        ],
-                                      ),
+                                      gradient: _image != null
+                                          ? ModernTheme.primaryGradient
+                                          : null,
+                                      color: _image == null ? ModernTheme.borderLight : null,
                                       borderRadius: BorderRadius.circular(18),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color(
-                                            0xFF1565C0,
-                                          ).withValues(alpha: 0.5),
-                                          blurRadius: 20,
-                                          offset: const Offset(0, 10),
-                                        ),
-                                      ],
+                                      boxShadow: _image != null
+                                          ? ModernTheme.coloredShadow(
+                                              ModernTheme.primaryBlue,
+                                              opacity: 0.5,
+                                            )
+                                          : null,
                                     ),
                                     child: ElevatedButton(
-                                      onPressed: () =>
-                                          Navigator.pushReplacementNamed(
-                                            context,
-                                            '/processing',
-                                          ),
+                                      onPressed: _image == null 
+                                        ? null 
+                                        : () {
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              '/processing',
+                                            );
+                                          },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.transparent,
                                         shadowColor: Colors.transparent,
                                         disabledBackgroundColor:
-                                            Colors.grey.shade300,
+                                            ModernTheme.borderLight,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
                                             18,
