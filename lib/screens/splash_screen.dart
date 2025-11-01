@@ -165,7 +165,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   ),
                                   const SizedBox(height: 16),
                                   Text(
-                                    'AI that understands your handwriting',
+                                    'Intelligence that reads the rhythm of your pen.',
                                     style: GoogleFonts.inter(
                                       fontSize: 15,
                                       color: ModernTheme.primaryBlue,

@@ -224,7 +224,7 @@ class _UploadScreenState extends State<UploadScreen>
                                   Navigator.pushNamed(context, '/drawing'),
                               isWide: true,
                             ),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 26),
                             // Preview Section
                             Container(
                               padding: const EdgeInsets.all(12),
@@ -498,8 +498,8 @@ class _OptionCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
-        height: isWide ? 100 : 150,
-        padding: const EdgeInsets.all(16),
+        height: isWide ? 100 : 100,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: gradient,
@@ -561,32 +561,41 @@ class _OptionCard extends StatelessWidget {
               )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(icon, color: Colors.white, size: 32),
+                    child: Icon(icon, color: Colors.white, size: 24),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    label,
-                    style: GoogleFonts.inter(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                  const SizedBox(height: 4),
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const SizedBox(height: 3),
-                  Text(
-                    subtitle,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      color: Colors.white.withValues(alpha: 0.9),
-                      fontWeight: FontWeight.w500,
+                  const SizedBox(height: 2),
+                  Flexible(
+                    child: Text(
+                      subtitle,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        fontSize: 10,
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
                 ],
