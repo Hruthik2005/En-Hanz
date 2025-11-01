@@ -5,6 +5,10 @@ import '../state/app_state.dart';
 import '../models/profile.dart';
 import '../utils/app_strings.dart';
 import '../utils/modern_theme.dart';
+import '../services/auth_service.dart';
+import '../services/user_service.dart';
+import '../services/report_service.dart';
+import 'child_profile_selection_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +22,15 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
+  final _authService = AuthService();
+  final _userService = UserService();
+  final _reportService = ReportService();
+
+  Profile? _userProfile;
+  double _riskScore = 0.0;
+  int _iqScore = 0;
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +42,73 @@ class _HomeScreenState extends State<HomeScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
     _animationController.forward();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      final userId = _authService.currentUserId;
+      if (userId == null) return;
+
+      // Load user profile from Firebase
+      final userModel = await _userService.getUser(userId);
+      if (userModel != null) {
+        setState(() {
+          _userProfile = Profile(
+            name: userModel.name,
+            age: userModel.age,
+            schoolClass: '', // Not stored in UserModel
+            gender: userModel.gender ?? 'Other',
+            disabilities: userModel.disabilityType != null
+                ? [userModel.disabilityType!]
+                : [],
+            handedness: 'Right', // Default value, not stored in UserModel
+          );
+        });
+      }
+
+      // Load latest report to get risk and IQ scores
+      final reports = await _reportService.getUserReports(userId);
+      if (reports.isNotEmpty) {
+        final latestReport = reports.first;
+
+        // Parse risk score from label
+        double risk = 0.0;
+        if (latestReport.overallRiskLabel.toLowerCase().contains('low')) {
+          risk = 0.3;
+        } else if (latestReport.overallRiskLabel.toLowerCase().contains(
+          'moderate',
+        )) {
+          risk = 0.5;
+        } else if (latestReport.overallRiskLabel.toLowerCase().contains(
+          'high',
+        )) {
+          risk = 0.7;
+        }
+
+        // Get IQ score if available
+        int iq = 100;
+        if (latestReport.iqResultId != null) {
+          final iqResult = await _reportService.getIQResult(
+            latestReport.iqResultId!,
+          );
+          if (iqResult != null) {
+            iq = iqResult.iqValue.round();
+          }
+        }
+
+        setState(() {
+          _riskScore = risk;
+          _iqScore = iq;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading user data: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -40,9 +120,10 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
-    final profile = appState.profile;
-    final riskScore = appState.risk;
-    final iqScore = appState.iqScore;
+    // Use Firebase data if available, fallback to AppState
+    final profile = _userProfile ?? appState.profile;
+    final riskScore = _riskScore > 0 ? _riskScore : appState.risk;
+    final iqScore = _iqScore > 0 ? _iqScore : appState.iqScore;
     final language = appState.settings.language;
 
     // Determine risk level
@@ -72,207 +153,267 @@ class _HomeScreenState extends State<HomeScreen>
             gradient: ModernTheme.blueBackgroundGradient,
           ),
           child: SafeArea(
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header with Profile
-                      _buildHeader(profile),
-
-                      const SizedBox(height: 24),
-
-                      // Motivational Quote Box
-                      _buildMotivationalQuote(),
-
-                      const SizedBox(height: 24),
-
-                      // 3 Big Action Cards
-                      Text(
-                        'What would you like to do?',
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade800,
-                        ),
+            child: _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        ModernTheme.primaryBlue,
                       ),
-
-                      const SizedBox(height: 16),
-
-                      _buildBigActionCard(
-                        icon: Icons.rocket_launch_rounded,
-                        title: AppStrings.get('start_new_test', language),
-                        subtitle: 'Begin fresh handwriting assessment',
-                        emoji: '🧠',
-                        gradient: [ModernTheme.primaryBlue, ModernTheme.infoCyan],
-                        onTap: () => Navigator.pushNamed(context, '/profile'),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      if (riskScore > 0)
-                        _buildBigActionCard(
-                          icon: Icons.bar_chart_rounded,
-                          title: AppStrings.get('view_report', language),
-                          subtitle: 'See your assessment results',
-                          emoji: '📊',
-                          gradient: [ModernTheme.infoCyan, ModernTheme.successGreen],
-                          onTap: () => Navigator.pushNamed(context, '/results'),
-                        ),
-
-                      if (riskScore > 0) const SizedBox(height: 16),
-
-                      _buildBigActionCard(
-                        icon: Icons.games_rounded,
-                        title: AppStrings.get('practice_zone', language),
-                        subtitle: 'Fun games to improve writing',
-                        emoji: '🎮',
-                        gradient: [ModernTheme.accentAmber, Color(0xFFF97316)],
-                        onTap: () => Navigator.pushNamed(context, '/practice'),
-                      ),
-
-                      const SizedBox(height: 32),
-
-                      // Latest Assessment Card
-                      if (riskScore > 0) ...[
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.history_rounded,
-                              color: ModernTheme.primaryBlue,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Recent Activity',
-                              style: GoogleFonts.poppins(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: ModernTheme.textDark,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        _buildAssessmentCard(
-                          riskLevel,
-                          riskColor,
-                          riskIcon,
-                          riskScore,
-                          iqScore,
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-
-                      // Quick Actions
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.grid_view_rounded,
-                            color: ModernTheme.primaryBlue,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'More Options',
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: ModernTheme.textDark,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // Action Cards Grid
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildSmallActionCard(
-                              icon: Icons.history_edu_rounded,
-                              title: AppStrings.get('history', language),
-                              gradient: [ModernTheme.primaryBlue, ModernTheme.secondaryPurple],
-                              onTap: () =>
-                                  Navigator.pushNamed(context, '/history'),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _buildSmallActionCard(
-                              icon: Icons.chat_bubble_rounded,
-                              title: AppStrings.get('handybot', language),
-                              gradient: [ModernTheme.secondaryPurple, Color(0xFF9333EA)],
-                              onTap: () =>
-                                  Navigator.pushNamed(context, '/handybot'),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildSmallActionCard(
-                              icon: Icons.settings_rounded,
-                              title: AppStrings.get('settings', language),
-                              gradient: [ModernTheme.textMedium, ModernTheme.textLight],
-                              onTap: () =>
-                                  Navigator.pushNamed(context, '/settings'),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _buildSmallActionCard(
-                              icon: Icons.info_outline_rounded,
-                              title: AppStrings.get('about', language),
-                              gradient: [ModernTheme.infoCyan, ModernTheme.primaryBlue],
-                              onTap: () => Navigator.pushNamed(context, '/about'),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 32),
-
-                      // Footer
-                      Center(
+                    ),
+                  )
+                : FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Header with Profile
+                            _buildHeader(profile),
+
+                            const SizedBox(height: 24),
+
+                            // Motivational Quote Box
+                            _buildMotivationalQuote(),
+
+                            const SizedBox(height: 24),
+
+                            // 3 Big Action Cards
                             Text(
-                              'En-HanZ',
+                              'What would you like to do?',
                               style: GoogleFonts.poppins(
-                                fontSize: 16,
+                                fontSize: 20,
                                 fontWeight: FontWeight.w700,
-                                color: ModernTheme.primaryBlue,
-                                letterSpacing: 1.2,
+                                color: Colors.grey.shade800,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'AI-Powered Dysgraphia Detection',
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                color: ModernTheme.textMedium,
+
+                            const SizedBox(height: 16),
+
+                            _buildBigActionCard(
+                              icon: Icons.rocket_launch_rounded,
+                              title: AppStrings.get('start_new_test', language),
+                              subtitle: 'Begin fresh handwriting assessment',
+                              emoji: '🧠',
+                              gradient: [
+                                ModernTheme.primaryBlue,
+                                ModernTheme.infoCyan,
+                              ],
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ChildProfileSelectionScreen(
+                                        targetRoute: '/iq',
+                                      ),
+                                ),
                               ),
                             ),
+
+                            const SizedBox(height: 16),
+
+                            if (riskScore > 0)
+                              _buildBigActionCard(
+                                icon: Icons.bar_chart_rounded,
+                                title: AppStrings.get('view_report', language),
+                                subtitle: 'See your assessment results',
+                                emoji: '📊',
+                                gradient: [
+                                  ModernTheme.infoCyan,
+                                  ModernTheme.successGreen,
+                                ],
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ChildProfileSelectionScreen(
+                                          targetRoute: '/results',
+                                        ),
+                                  ),
+                                ),
+                              ),
+
+                            if (riskScore > 0) const SizedBox(height: 16),
+
+                            _buildBigActionCard(
+                              icon: Icons.games_rounded,
+                              title: AppStrings.get('practice_zone', language),
+                              subtitle: 'Fun games to improve writing',
+                              emoji: '🎮',
+                              gradient: [
+                                ModernTheme.accentAmber,
+                                Color(0xFFF97316),
+                              ],
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ChildProfileSelectionScreen(
+                                        targetRoute: '/practice',
+                                      ),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 32),
+
+                            // Latest Assessment Card
+                            if (riskScore > 0) ...[
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.history_rounded,
+                                    color: ModernTheme.primaryBlue,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Recent Activity',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: ModernTheme.textDark,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              _buildAssessmentCard(
+                                riskLevel,
+                                riskColor,
+                                riskIcon,
+                                riskScore,
+                                iqScore,
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+
+                            // Quick Actions
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.grid_view_rounded,
+                                  color: ModernTheme.primaryBlue,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'More Options',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: ModernTheme.textDark,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            // Action Cards Grid
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _buildSmallActionCard(
+                                    icon: Icons.history_edu_rounded,
+                                    title: AppStrings.get('history', language),
+                                    gradient: [
+                                      ModernTheme.primaryBlue,
+                                      ModernTheme.secondaryPurple,
+                                    ],
+                                    onTap: () => Navigator.pushNamed(
+                                      context,
+                                      '/history',
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: _buildSmallActionCard(
+                                    icon: Icons.chat_bubble_rounded,
+                                    title: AppStrings.get('handybot', language),
+                                    gradient: [
+                                      ModernTheme.secondaryPurple,
+                                      Color(0xFF9333EA),
+                                    ],
+                                    onTap: () => Navigator.pushNamed(
+                                      context,
+                                      '/handybot',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _buildSmallActionCard(
+                                    icon: Icons.settings_rounded,
+                                    title: AppStrings.get('settings', language),
+                                    gradient: [
+                                      ModernTheme.textMedium,
+                                      ModernTheme.textLight,
+                                    ],
+                                    onTap: () => Navigator.pushNamed(
+                                      context,
+                                      '/settings',
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: _buildSmallActionCard(
+                                    icon: Icons.info_outline_rounded,
+                                    title: AppStrings.get('about', language),
+                                    gradient: [
+                                      ModernTheme.infoCyan,
+                                      ModernTheme.primaryBlue,
+                                    ],
+                                    onTap: () =>
+                                        Navigator.pushNamed(context, '/about'),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 32),
+
+                            // Footer
+                            Center(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'En-HanZ',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: ModernTheme.primaryBlue,
+                                      letterSpacing: 1.2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'AI-Powered Dysgraphia Detection',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color: ModernTheme.textMedium,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            const SizedBox(height: 20),
                           ],
                         ),
                       ),
-
-                      const SizedBox(height: 20),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
           ),
         ),
       ),
@@ -493,10 +634,7 @@ class _HomeScreenState extends State<HomeScreen>
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  ModernTheme.accentAmber,
-                  ModernTheme.accentAmberDark,
-                ],
+                colors: [ModernTheme.accentAmber, ModernTheme.accentAmberDark],
               ),
               shape: BoxShape.circle,
               boxShadow: ModernTheme.coloredShadow(
@@ -558,10 +696,7 @@ class _HomeScreenState extends State<HomeScreen>
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: gradient),
           borderRadius: BorderRadius.circular(24),
-          boxShadow: ModernTheme.coloredShadow(
-            gradient[0],
-            opacity: 0.4,
-          ),
+          boxShadow: ModernTheme.coloredShadow(gradient[0], opacity: 0.4),
         ),
         child: Row(
           children: [
@@ -622,10 +757,7 @@ class _HomeScreenState extends State<HomeScreen>
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: gradient),
           borderRadius: BorderRadius.circular(20),
-          boxShadow: ModernTheme.coloredShadow(
-            gradient[0],
-            opacity: 0.3,
-          ),
+          boxShadow: ModernTheme.coloredShadow(gradient[0], opacity: 0.3),
         ),
         child: Column(
           children: [

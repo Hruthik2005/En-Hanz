@@ -13,16 +13,17 @@ class _LetterTracingGameState extends State<LetterTracingGame> {
   final GlobalKey _canvasKey = GlobalKey();
   final List<String> _letters = ['A', 'B', 'C', 'D', 'E', 'M', 'N', 'O'];
   int _currentLetterIndex = 0;
-  List<Offset?> _drawnPoints = [];
+  final List<Offset?> _drawnPoints = [];
   double? _accuracy;
   bool _showFeedback = false;
-  List<double> _scores = [];
+  final List<double> _scores = [];
 
   String get _currentLetter => _letters[_currentLetterIndex];
 
   void _onPanStart(DragStartDetails details) {
     setState(() {
-      RenderBox? renderBox = _canvasKey.currentContext?.findRenderObject() as RenderBox?;
+      RenderBox? renderBox =
+          _canvasKey.currentContext?.findRenderObject() as RenderBox?;
       if (renderBox != null) {
         Offset localPosition = renderBox.globalToLocal(details.globalPosition);
         _drawnPoints.add(localPosition);
@@ -32,7 +33,8 @@ class _LetterTracingGameState extends State<LetterTracingGame> {
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
-      RenderBox? renderBox = _canvasKey.currentContext?.findRenderObject() as RenderBox?;
+      RenderBox? renderBox =
+          _canvasKey.currentContext?.findRenderObject() as RenderBox?;
       if (renderBox != null) {
         Offset localPosition = renderBox.globalToLocal(details.globalPosition);
         _drawnPoints.add(localPosition);
@@ -55,7 +57,7 @@ class _LetterTracingGameState extends State<LetterTracingGame> {
     double coverage = math.min(_drawnPoints.length / 100, 1.0);
     double randomFactor = 0.7 + (math.Random().nextDouble() * 0.25);
     double acc = (coverage * randomFactor * 100);
-    
+
     setState(() {
       _accuracy = acc;
       _showFeedback = true;
@@ -97,7 +99,7 @@ class _LetterTracingGameState extends State<LetterTracingGame> {
       );
       return;
     }
-    
+
     if (_currentLetterIndex < _letters.length - 1) {
       setState(() {
         _currentLetterIndex++;
@@ -111,8 +113,10 @@ class _LetterTracingGameState extends State<LetterTracingGame> {
   }
 
   void _showResults() {
-    double avgScore = _scores.isEmpty ? 0 : _scores.reduce((a, b) => a + b) / _scores.length;
-    
+    double avgScore = _scores.isEmpty
+        ? 0
+        : _scores.reduce((a, b) => a + b) / _scores.length;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -158,8 +162,8 @@ class _LetterTracingGameState extends State<LetterTracingGame> {
                 avgScore > 85
                     ? "Excellent tracing! 🌟"
                     : avgScore > 70
-                        ? "Good work! Keep practicing! 💪"
-                        : "Keep practicing, you'll get better! 🎯",
+                    ? "Good work! Keep practicing! 💪"
+                    : "Keep practicing, you'll get better! 🎯",
                 style: GoogleFonts.inter(fontSize: 14),
                 textAlign: TextAlign.center,
               ),
@@ -218,7 +222,10 @@ class _LetterTracingGameState extends State<LetterTracingGame> {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back_rounded, color: Color(0xFF1565C0)),
+                      icon: Icon(
+                        Icons.arrow_back_rounded,
+                        color: Color(0xFF1565C0),
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                     Expanded(
@@ -366,7 +373,9 @@ class _LetterTracingGameState extends State<LetterTracingGame> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        _accuracy! > 70 ? '✅ Well Done!' : '👍 Keep Trying!',
+                                        _accuracy! > 70
+                                            ? '✅ Well Done!'
+                                            : '👍 Keep Trying!',
                                         style: GoogleFonts.poppins(
                                           fontSize: 24,
                                           fontWeight: FontWeight.bold,

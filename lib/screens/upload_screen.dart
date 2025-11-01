@@ -63,9 +63,7 @@ class _UploadScreenState extends State<UploadScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: ModernTheme.blueBackgroundGradient,
-        ),
+        decoration: BoxDecoration(gradient: ModernTheme.blueBackgroundGradient),
         child: SafeArea(
           child: Column(
             children: [
@@ -93,8 +91,9 @@ class _UploadScreenState extends State<UploadScreen>
                         Expanded(
                           child: Center(
                             child: ShaderMask(
-                              shaderCallback: (bounds) =>
-                                  ModernTheme.primaryGradient.createShader(bounds),
+                              shaderCallback: (bounds) => ModernTheme
+                                  .primaryGradient
+                                  .createShader(bounds),
                               child: Text(
                                 'En-HanZ',
                                 style: GoogleFonts.poppins(
@@ -217,7 +216,10 @@ class _UploadScreenState extends State<UploadScreen>
                               icon: Icons.draw_rounded,
                               label: 'Draw with Stylus',
                               subtitle: 'Write directly on screen',
-                              gradient: [ModernTheme.accentAmber, ModernTheme.accentAmberDark],
+                              gradient: [
+                                ModernTheme.accentAmber,
+                                ModernTheme.accentAmberDark,
+                              ],
                               onTap: () =>
                                   Navigator.pushNamed(context, '/drawing'),
                               isWide: true,
@@ -227,10 +229,14 @@ class _UploadScreenState extends State<UploadScreen>
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: ModernTheme.primaryBlue.withValues(alpha: 0.05),
+                                color: ModernTheme.primaryBlue.withValues(
+                                  alpha: 0.05,
+                                ),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: ModernTheme.primaryBlue.withValues(alpha: 0.3),
+                                  color: ModernTheme.primaryBlue.withValues(
+                                    alpha: 0.3,
+                                  ),
                                 ),
                               ),
                               child: Row(
@@ -395,7 +401,9 @@ class _UploadScreenState extends State<UploadScreen>
                                       gradient: _image != null
                                           ? ModernTheme.primaryGradient
                                           : null,
-                                      color: _image == null ? ModernTheme.borderLight : null,
+                                      color: _image == null
+                                          ? ModernTheme.borderLight
+                                          : null,
                                       borderRadius: BorderRadius.circular(18),
                                       boxShadow: _image != null
                                           ? ModernTheme.coloredShadow(
@@ -405,14 +413,14 @@ class _UploadScreenState extends State<UploadScreen>
                                           : null,
                                     ),
                                     child: ElevatedButton(
-                                      onPressed: _image == null 
-                                        ? null 
-                                        : () {
-                                            Navigator.pushReplacementNamed(
-                                              context,
-                                              '/processing',
-                                            );
-                                          },
+                                      onPressed: _image == null
+                                          ? null
+                                          : () {
+                                              Navigator.pushReplacementNamed(
+                                                context,
+                                                '/processing',
+                                              );
+                                            },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.transparent,
                                         shadowColor: Colors.transparent,

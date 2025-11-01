@@ -30,11 +30,27 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
 
   void _checkAssessmentCompletion() {
     final appState = Provider.of<AppState>(context, listen: false);
-    
-    // Check if user has completed the assessment
-    if (appState.risk == 0.0 || appState.iqScore == 0) {
+
+    // Check if user has completed both IQ test and handwriting assessment
+    // IQ score should be > 0 (valid scores are typically 60-130+)
+    // handwritingImagePath should not be null (indicates handwriting was uploaded)
+    final bool iqTestCompleted = appState.iqScore > 0;
+    final bool handwritingCompleted = appState.handwritingImagePath != null;
+
+    if (!iqTestCompleted || !handwritingCompleted) {
       // Show warning dialog
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        String missingAssessment;
+        if (!iqTestCompleted && !handwritingCompleted) {
+          missingAssessment =
+              'Please complete both the IQ test and handwriting assessment first.';
+        } else if (!iqTestCompleted) {
+          missingAssessment = 'Please complete the IQ test first.';
+        } else {
+          missingAssessment =
+              'Please complete the handwriting assessment first.';
+        }
+
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -44,7 +60,11 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
             ),
             title: Row(
               children: [
-                Icon(Icons.warning_amber_rounded, color: Colors.orange.shade700, size: 28),
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.orange.shade700,
+                  size: 28,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -59,7 +79,7 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
               ],
             ),
             content: Text(
-              'Please complete the handwriting assessment first before consulting with HandyBot.',
+              missingAssessment,
               style: GoogleFonts.inter(
                 fontSize: 14,
                 color: Colors.grey.shade700,
@@ -93,7 +113,10 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
       });
       return;
     }
-    
+
+    debugPrint(
+      '✅ Assessment check passed - IQ: ${appState.iqScore}, Handwriting: ${appState.handwritingImagePath != null}',
+    );
     _initialize();
   }
 
@@ -113,35 +136,38 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
     try {
       final appState = Provider.of<AppState>(context, listen: false);
       final language = appState.settings.language;
-      
+
       // Configure TTS based on selected language
       String locale;
       String voiceName;
       double speechRate;
       double pitch;
-      
+
       switch (language) {
         case 'Hindi':
           locale = "hi-IN";
-          voiceName = "hi-in-x-hid-network"; // Google's high-quality Hindi voice
+          voiceName =
+              "hi-in-x-hid-network"; // Google's high-quality Hindi voice
           speechRate = 0.45; // Slightly slower for better clarity in Hindi
           pitch = 1.0;
           break;
         case 'Kannada':
           locale = "kn-IN";
-          voiceName = "kn-in-x-knm-network"; // Google's high-quality Kannada voice
+          voiceName =
+              "kn-in-x-knm-network"; // Google's high-quality Kannada voice
           speechRate = 0.45; // Slightly slower for better clarity in Kannada
           pitch = 1.0;
           break;
         default: // English
           locale = "en-US";
-          voiceName = "en-us-x-sfg-network"; // Google's high-quality English voice
+          voiceName =
+              "en-us-x-sfg-network"; // Google's high-quality English voice
           speechRate = 0.50;
           pitch = 1.0;
       }
-      
+
       await _flutterTts.setLanguage(locale);
-      
+
       // Try to use Google's high-quality TTS engine first (Android only)
       try {
         await _flutterTts.setEngine("com.google.android.tts");
@@ -151,7 +177,7 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
         // Fallback to default engine if Google TTS not available
         debugPrint('Google TTS engine not available, using default: $e');
       }
-      
+
       // Configure speech parameters
       await _flutterTts.setSpeechRate(speechRate);
       await _flutterTts.setPitch(pitch);
@@ -212,12 +238,14 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
         .replaceAll(RegExp(r'\n+'), '. ')
         .replaceAll(RegExp(r'\s+'), ' ')
         .trim();
-    
+
     // Ensure proper sentence ending
-    if (!cleanText.endsWith('.') && !cleanText.endsWith('!') && !cleanText.endsWith('?')) {
+    if (!cleanText.endsWith('.') &&
+        !cleanText.endsWith('!') &&
+        !cleanText.endsWith('?')) {
       cleanText += '.';
     }
-    
+
     return cleanText;
   }
 
@@ -243,20 +271,36 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
     List<String> messages = [];
 
     // Opening message
-    messages.add(AppStrings.get('bot_greeting', language).replaceAll('{name}', name));
+    messages.add(
+      AppStrings.get('bot_greeting', language).replaceAll('{name}', name),
+    );
 
     // Risk-based messages
     if (risk < 0.4) {
       // Low Risk - Positive
-      messages.add(AppStrings.get('bot_low_risk_1', language).replaceAll('{name}', name));
+      messages.add(
+        AppStrings.get('bot_low_risk_1', language).replaceAll('{name}', name),
+      );
       messages.add(AppStrings.get('bot_low_risk_2', language));
     } else if (risk < 0.7) {
       // Moderate Risk - Encouraging
-      messages.add(AppStrings.get('bot_moderate_risk_1', language).replaceAll('{name}', name));
-      messages.add(AppStrings.get('bot_moderate_risk_2', language).replaceAll('{name}', name));
+      messages.add(
+        AppStrings.get(
+          'bot_moderate_risk_1',
+          language,
+        ).replaceAll('{name}', name),
+      );
+      messages.add(
+        AppStrings.get(
+          'bot_moderate_risk_2',
+          language,
+        ).replaceAll('{name}', name),
+      );
     } else {
       // High Risk - Supportive & Empathetic
-      messages.add(AppStrings.get('bot_high_risk_1', language).replaceAll('{name}', name));
+      messages.add(
+        AppStrings.get('bot_high_risk_1', language).replaceAll('{name}', name),
+      );
       messages.add(AppStrings.get('bot_high_risk_2', language));
     }
 
@@ -264,20 +308,21 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
     String riskLevel = risk < 0.4
         ? "${AppStrings.get('low_risk', language)} 🟢"
         : risk < 0.7
-            ? "${AppStrings.get('moderate_risk', language)} �"
-            : "${AppStrings.get('high_risk', language)} 🔴";
-    
-    String focusArea = risk < 0.4 
+        ? "${AppStrings.get('moderate_risk', language)} �"
+        : "${AppStrings.get('high_risk', language)} 🔴";
+
+    String focusArea = risk < 0.4
         ? AppStrings.get('focus_low', language)
-        : risk < 0.7 
-            ? AppStrings.get('focus_moderate', language)
-            : AppStrings.get('focus_high', language);
-    
+        : risk < 0.7
+        ? AppStrings.get('focus_moderate', language)
+        : AppStrings.get('focus_high', language);
+
     messages.add(
-        AppStrings.get('bot_summary', language)
-            .replaceAll('{risk}', riskLevel)
-            .replaceAll('{iq}', iq.toString())
-            .replaceAll('{focus}', focusArea));
+      AppStrings.get('bot_summary', language)
+          .replaceAll('{risk}', riskLevel)
+          .replaceAll('{iq}', iq.toString())
+          .replaceAll('{focus}', focusArea),
+    );
 
     // Closing message
     messages.add(AppStrings.get('bot_closing', language));
@@ -291,11 +336,9 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
           setState(() {
-            _messages.add(ChatMessage(
-              text: '',
-              isBot: true,
-              isActionButtons: true,
-            ));
+            _messages.add(
+              ChatMessage(text: '', isBot: true, isActionButtons: true),
+            );
           });
           _scrollToBottom();
         }
@@ -311,15 +354,17 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
 
       setState(() {
         _isTyping = false;
-        _messages.add(ChatMessage(
-          text: messages[index],
-          isBot: true,
-          timestamp: DateTime.now(),
-        ));
+        _messages.add(
+          ChatMessage(
+            text: messages[index],
+            isBot: true,
+            timestamp: DateTime.now(),
+          ),
+        );
       });
 
       _scrollToBottom();
-      
+
       // Wait for speech to complete before sending next message
       await _speak(messages[index]);
 
@@ -353,11 +398,9 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
       case 'practice':
         response = AppStrings.get('bot_practice', language);
         setState(() {
-          _messages.add(ChatMessage(
-            text: response,
-            isBot: true,
-            timestamp: DateTime.now(),
-          ));
+          _messages.add(
+            ChatMessage(text: response, isBot: true, timestamp: DateTime.now()),
+          );
         });
         _scrollToBottom();
         await _speak(response);
@@ -369,11 +412,9 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
       case 'report':
         response = AppStrings.get('bot_report', language);
         setState(() {
-          _messages.add(ChatMessage(
-            text: response,
-            isBot: true,
-            timestamp: DateTime.now(),
-          ));
+          _messages.add(
+            ChatMessage(text: response, isBot: true, timestamp: DateTime.now()),
+          );
         });
         _scrollToBottom();
         await _speak(response);
@@ -388,11 +429,9 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
     }
 
     setState(() {
-      _messages.add(ChatMessage(
-        text: response,
-        isBot: true,
-        timestamp: DateTime.now(),
-      ));
+      _messages.add(
+        ChatMessage(text: response, isBot: true, timestamp: DateTime.now()),
+      );
     });
     _scrollToBottom();
     await _speak(response);
@@ -411,19 +450,14 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/home', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         }
       },
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Color(0xFFE3F2FD),
-                Color(0xFFB3E5FC),
-                Color(0xFFE1F5FE)
-              ],
+              colors: [Color(0xFFE3F2FD), Color(0xFFB3E5FC), Color(0xFFE1F5FE)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -432,9 +466,7 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
             child: Column(
               children: [
                 _buildHeader(),
-                Expanded(
-                  child: _buildChatArea(),
-                ),
+                Expanded(child: _buildChatArea()),
               ],
             ),
           ),
@@ -473,10 +505,7 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
                 ),
               ],
             ),
-            child: Text(
-              '🤖',
-              style: TextStyle(fontSize: 28),
-            ),
+            child: Text('🤖', style: TextStyle(fontSize: 28)),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -492,7 +521,9 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
                   ),
                 ),
                 Text(
-                  _isSpeaking ? '🔊 Speaking...' : 'Your personal writing guide',
+                  _isSpeaking
+                      ? '🔊 Speaking...'
+                      : 'Your personal writing guide',
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -516,7 +547,9 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
               );
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(_ttsEnabled ? 'Voice enabled' : 'Voice disabled'),
+                  content: Text(
+                    _ttsEnabled ? 'Voice enabled' : 'Voice disabled',
+                  ),
                   duration: Duration(seconds: 1),
                 ),
               );
@@ -525,7 +558,10 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
           IconButton(
             icon: Icon(Icons.home_rounded, color: Color(0xFF1565C0)),
             onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                context, '/home', (route) => false),
+              context,
+              '/home',
+              (route) => false,
+            ),
           ),
         ],
       ),
@@ -600,24 +636,16 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
                   decoration: BoxDecoration(
                     gradient: message.isBot
                         ? LinearGradient(
-                            colors: [
-                              Color(0xFFE3F2FD),
-                              Color(0xFFBBDEFB),
-                            ],
+                            colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
                           )
                         : LinearGradient(
-                            colors: [
-                              Color(0xFF1565C0),
-                              Color(0xFF0288D1),
-                            ],
+                            colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
                           ),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
-                      bottomLeft:
-                          Radius.circular(message.isBot ? 4 : 20),
-                      bottomRight:
-                          Radius.circular(message.isBot ? 20 : 4),
+                      bottomLeft: Radius.circular(message.isBot ? 4 : 20),
+                      bottomRight: Radius.circular(message.isBot ? 20 : 4),
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -719,7 +747,10 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
         final offset = (index * 0.2);
         final animValue = ((value + offset) % 1.0);
         return Transform.translate(
-          offset: Offset(0, -4 * (animValue < 0.5 ? animValue * 2 : (1 - animValue) * 2)),
+          offset: Offset(
+            0,
+            -4 * (animValue < 0.5 ? animValue * 2 : (1 - animValue) * 2),
+          ),
           child: Container(
             width: 8,
             height: 8,
@@ -830,10 +861,7 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: color.withValues(alpha: 0.3),
-            width: 2,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
         ),
         child: Row(
           children: [
@@ -856,11 +884,7 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
                 ),
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: color,
-            ),
+            Icon(Icons.arrow_forward_ios, size: 16, color: color),
           ],
         ),
       ),

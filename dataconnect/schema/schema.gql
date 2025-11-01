@@ -1,0 +1,62 @@
+type User @table {
+  uid: String!
+  email: String!
+  role: String!
+  createdAt: Timestamp!
+  displayName: String
+  phoneNumber: String
+}
+
+type Child @table {
+  name: String!
+  dateOfBirth: Date!
+  gender: String!
+  primaryLanguage: String!
+  createdAt: Timestamp!
+  photoUrl: String
+  parent: User
+}
+
+type HandwritingSample @table {
+  imageUrl: String!
+  uploadDate: Timestamp!
+  analysisStatus: String!
+  languageUsed: String!
+  createdAt: Timestamp!
+  aiFeedbackSummary: String
+  riskScore: Float
+  child: Child
+}
+
+type AssessmentResult @table {
+  type: String!
+  assessmentDate: Timestamp!
+  resultData: String!
+  createdAt: Timestamp!
+  riskLevel: String
+  recommendedActivities: String
+  child: Child
+  handwritingSample: HandwritingSample
+}
+
+type Activity @table {
+  name: String!
+  description: String!
+  difficultyLevel: String!
+  language: String!
+  activityType: String!
+  createdAt: Timestamp!
+  imageUrl: String
+  instructions: String
+}
+
+type ChildActivityProgress @table(key: ["child", "activity"]) {
+  completionDate: Timestamp!
+  score: Int!
+  attempts: Int!
+  createdAt: Timestamp!
+  notes: String
+  improvementSuggestions: String
+  child: Child!
+  activity: Activity!
+}

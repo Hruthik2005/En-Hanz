@@ -5,6 +5,7 @@ import '../state/app_state.dart';
 import '../models/app_settings.dart';
 import '../utils/app_strings.dart';
 import '../utils/modern_theme.dart';
+import '../services/auth_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -42,9 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: ModernTheme.blueBackgroundGradient,
-        ),
+        decoration: BoxDecoration(gradient: ModernTheme.blueBackgroundGradient),
         child: SafeArea(
           child: Column(
             children: [
@@ -169,15 +168,95 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       // Logout Button
                       _buildActionCard(
                         icon: Icons.logout_rounded,
-                        title: 'Start Fresh',
-                        subtitle: 'Reset profile and begin again',
-                        color: ModernTheme.primaryBlue,
-                        onTap: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            '/profile',
-                            (route) => false,
+                        title: 'Logout',
+                        subtitle: 'Sign out of your account',
+                        color: ModernTheme.secondaryPurple,
+                        onTap: () async {
+                          // Show logout confirmation dialog
+                          final shouldLogout = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              title: Text(
+                                'Logout',
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold,
+                                  color: ModernTheme.primaryBlue,
+                                ),
+                              ),
+                              content: Text(
+                                'Are you sure you want to logout?',
+                                style: GoogleFonts.inter(
+                                  color: ModernTheme.textMedium,
+                                  height: 1.5,
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: Text(
+                                    'Cancel',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: ModernTheme.textMedium,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        ModernTheme.secondaryPurple,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Logout',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
+
+                          if (shouldLogout == true && mounted) {
+                            try {
+                              await AuthService().signOut();
+                              // Navigate to login screen and clear navigation stack
+                              if (mounted) {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/login',
+                                  (route) =>
+                                      false, // Remove all previous routes
+                                );
+                              }
+                            } catch (e) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Logout failed: $e',
+                                      style: GoogleFonts.inter(),
+                                    ),
+                                    backgroundColor: ModernTheme.dangerRed,
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          }
                         },
                       ),
 
@@ -299,9 +378,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    gradient: isSelected
-                        ? ModernTheme.primaryGradient
-                        : null,
+                    gradient: isSelected ? ModernTheme.primaryGradient : null,
                     color: isSelected ? null : ModernTheme.hoverLight,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
@@ -386,7 +463,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: ModernTheme.primaryBlue,
+            activeThumbColor: ModernTheme.primaryBlue,
           ),
         ],
       ),
@@ -439,11 +516,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: color,
-              size: 18,
-            ),
+            Icon(Icons.arrow_forward_ios_rounded, color: color, size: 18),
           ],
         ),
       ),

@@ -3,6 +3,10 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../state/app_state.dart';
+import '../services/report_service.dart';
+import '../models/report_model.dart';
+import '../models/iq_result_model.dart';
+import '../models/handwriting_analysis_model.dart';
 
 class ResultsScreen extends StatefulWidget {
   const ResultsScreen({super.key});
@@ -16,6 +20,18 @@ class _ResultsScreenState extends State<ResultsScreen>
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+
+  final _reportService = ReportService();
+  bool _isLoading = true;
+
+  // Report data
+  ReportModel? _latestReport;
+  IQResultModel? _iqResult;
+  HandwritingAnalysisModel? _handwritingAnalysis;
+  double _riskScore = 0.0;
+  int _iqScore = 0;
+  double _mentalAge = 0.0;
+  String _recommendation = '';
 
   @override
   void initState() {
@@ -31,7 +47,93 @@ class _ResultsScreenState extends State<ResultsScreen>
         Tween<Offset>(begin: const Offset(0, 0.15), end: Offset.zero).animate(
           CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
         );
-    _animController.forward();
+    _loadReportData();
+  }
+
+  Future<void> _loadReportData() async {
+    try {
+      final appState = Provider.of<AppState>(context, listen: false);
+
+      // Get the selected child profile
+      final childProfile = appState.selectedChildProfile;
+
+      if (childProfile?.id != null) {
+        // Load reports for the selected child
+        final reports = await _reportService.getChildProfileReports(
+          childProfile!.id!,
+        );
+
+        if (reports.isNotEmpty) {
+          _latestReport = reports.first;
+
+          // Load IQ result if available
+          if (_latestReport!.iqResultId != null) {
+            _iqResult = await _reportService.getIQResult(
+              _latestReport!.iqResultId!,
+            );
+            if (_iqResult != null) {
+              _iqScore = _iqResult!.iqValue.round();
+              _mentalAge = _iqResult!.mentalAge;
+            }
+          }
+
+          // Load handwriting analysis if available
+          if (_latestReport!.handwritingId != null) {
+            _handwritingAnalysis = await _reportService.getHandwritingAnalysis(
+              _latestReport!.handwritingId!,
+            );
+            if (_handwritingAnalysis != null) {
+              _riskScore = _handwritingAnalysis!.riskScore;
+              _recommendation = _handwritingAnalysis!.recommendation;
+            }
+          }
+
+          // Use report feedback if available
+          if (_latestReport!.overallFeedback.isNotEmpty) {
+            _recommendation = _latestReport!.overallFeedback;
+          }
+
+          debugPrint(
+            '✅ Loaded report data for child: ${childProfile.childName}',
+          );
+          debugPrint('   - Risk Score: $_riskScore');
+          debugPrint('   - IQ Score: $_iqScore');
+          debugPrint('   - Mental Age: $_mentalAge');
+        } else {
+          // No reports found, try to get from AppState as fallback
+          debugPrint('⚠️ No reports found for child profile, using AppState');
+          _riskScore = appState.risk;
+          _iqScore = appState.iqScore;
+          _mentalAge = appState.mentalAge;
+          _recommendation = appState.recommendation;
+        }
+      } else {
+        // No child profile selected, use AppState
+        debugPrint('⚠️ No child profile selected, using AppState');
+        _riskScore = appState.risk;
+        _iqScore = appState.iqScore;
+        _mentalAge = appState.mentalAge;
+        _recommendation = appState.recommendation;
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      _animController.forward();
+    } catch (e) {
+      debugPrint('❌ Error loading report data: $e');
+      // Fallback to AppState on error
+      final appState = Provider.of<AppState>(context, listen: false);
+      setState(() {
+        _riskScore = appState.risk;
+        _iqScore = appState.iqScore;
+        _mentalAge = appState.mentalAge;
+        _recommendation = appState.recommendation;
+        _isLoading = false;
+      });
+      _animController.forward();
+    }
   }
 
   @override
@@ -61,11 +163,17 @@ class _ResultsScreenState extends State<ResultsScreen>
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
-    final risk = appState.risk;
+
+    // Use loaded data if available, otherwise use AppState as fallback
+    final risk = _isLoading ? appState.risk : _riskScore;
     final percent = (risk).clamp(0.0, 1.0);
-    final iq = appState.iqScore;
-    final mentalAge = appState.mentalAge;
-    final chronoAge = appState.profile?.age ?? 0;
+    final iq = _isLoading ? appState.iqScore : _iqScore;
+    final mentalAge = _isLoading ? appState.mentalAge : _mentalAge;
+    final chronoAge =
+        appState.selectedChildProfile?.age ?? appState.profile?.age ?? 0;
+    final recommendation = _isLoading
+        ? appState.recommendation
+        : _recommendation;
     final riskColor = _colorFromRisk(risk);
 
     return PopScope(
@@ -147,251 +255,289 @@ class _ResultsScreenState extends State<ResultsScreen>
 
                 // Main Content
                 Expanded(
-                  child: FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: SlideTransition(
-                      position: _slideAnimation,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(36),
-                            topRight: Radius.circular(36),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.12),
-                              blurRadius: 30,
-                              offset: const Offset(0, -8),
-                            ),
-                          ],
-                        ),
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
+                  child: _isLoading
+                      ? Center(
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              // Risk Score Circle
-                              Container(
-                                padding: const EdgeInsets.all(24),
-                                decoration: BoxDecoration(
-                                  color: riskColor.withValues(alpha: 0.05),
-                                  borderRadius: BorderRadius.circular(24),
+                              CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFF1565C0),
                                 ),
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                'Loading report...',
+                                style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: SlideTransition(
+                            position: _slideAnimation,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(36),
+                                  topRight: Radius.circular(36),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.12),
+                                    blurRadius: 30,
+                                    offset: const Offset(0, -8),
+                                  ),
+                                ],
+                              ),
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
                                 child: Column(
                                   children: [
-                                    CircularPercentIndicator(
-                                      radius: 90.0,
-                                      lineWidth: 14.0,
-                                      percent: percent,
-                                      center: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            _riskIcon(risk),
-                                            color: riskColor,
-                                            size: 48,
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            '${(percent * 100).toInt()}%',
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.w700,
-                                              color: riskColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      backgroundColor: Colors.grey.shade200,
-                                      progressColor: riskColor,
-                                      circularStrokeCap:
-                                          CircularStrokeCap.round,
-                                      animation: true,
-                                      animationDuration: 1200,
-                                    ),
-                                    const SizedBox(height: 20),
+                                    // Risk Score Circle
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 20,
-                                        vertical: 12,
-                                      ),
+                                      padding: const EdgeInsets.all(24),
                                       decoration: BoxDecoration(
-                                        color: riskColor,
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: riskColor.withValues(
-                                              alpha: 0.3,
+                                        color: riskColor.withValues(
+                                          alpha: 0.05,
+                                        ),
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          CircularPercentIndicator(
+                                            radius: 90.0,
+                                            lineWidth: 14.0,
+                                            percent: percent,
+                                            center: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  _riskIcon(risk),
+                                                  color: riskColor,
+                                                  size: 48,
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  '${(percent * 100).toInt()}%',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 32,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: riskColor,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            blurRadius: 12,
-                                            offset: const Offset(0, 4),
+                                            backgroundColor:
+                                                Colors.grey.shade200,
+                                            progressColor: riskColor,
+                                            circularStrokeCap:
+                                                CircularStrokeCap.round,
+                                            animation: true,
+                                            animationDuration: 1200,
                                           ),
-                                        ],
-                                      ),
-                                      child: Text(
-                                        _riskLabel(risk),
-                                        style: GoogleFonts.inter(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white,
-                                          letterSpacing: 0.5,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(height: 24),
-
-                              // Recommendation Card
-                              _buildInfoCard(
-                                icon: Icons.lightbulb_rounded,
-                                title: 'Recommendation',
-                                content: appState.recommendation,
-                                color: Color(0xFF0288D1),
-                              ),
-
-                              const SizedBox(height: 16),
-
-                              // Mental vs Chronological Age
-                              _buildInfoCard(
-                                icon: Icons.psychology_rounded,
-                                title: 'Cognitive Assessment',
-                                color: Color(0xFF1565C0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: _buildAgeBar(
-                                        'Chronological',
-                                        chronoAge.toDouble(),
-                                        Color(0xFF1565C0),
-                                        '$chronoAge yrs',
-                                      ),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    Expanded(
-                                      child: _buildAgeBar(
-                                        'Mental Age',
-                                        mentalAge,
-                                        Color(0xFF0288D1),
-                                        '${mentalAge.toStringAsFixed(1)} yrs',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(height: 16),
-
-                              // IQ Score Card
-                              _buildInfoCard(
-                                icon: Icons.emoji_events_rounded,
-                                title: 'IQ Score',
-                                color: Color(0xFFFF9800),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '$iq',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 48,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFFFF9800),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Text('🧠', style: TextStyle(fontSize: 36)),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(height: 32),
-
-                              // Action Button
-                              TweenAnimationBuilder<double>(
-                                tween: Tween(begin: 0.95, end: 1.0),
-                                duration: const Duration(milliseconds: 200),
-                                curve: Curves.easeOut,
-                                builder: (context, value, child) {
-                                  return Transform.scale(
-                                    scale: value,
-                                    child: Container(
-                                      height: 56,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Color(0xFF1565C0),
-                                            Color(0xFF0288D1),
-                                          ],
-                                        ),
-                                        borderRadius: BorderRadius.circular(18),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Color(
-                                              0xFF1565C0,
-                                            ).withValues(alpha: 0.5),
-                                            blurRadius: 20,
-                                            offset: const Offset(0, 10),
-                                          ),
-                                        ],
-                                      ),
-                                      child: ElevatedButton(
-                                        onPressed: () => Navigator.pushNamed(
-                                          context,
-                                          '/handybot',
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.transparent,
-                                          shadowColor: Colors.transparent,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              18,
+                                          const SizedBox(height: 20),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 12,
                                             ),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              '🤖',
-                                              style: TextStyle(fontSize: 24),
+                                            decoration: BoxDecoration(
+                                              color: riskColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: riskColor.withValues(
+                                                    alpha: 0.3,
+                                                  ),
+                                                  blurRadius: 12,
+                                                  offset: const Offset(0, 4),
+                                                ),
+                                              ],
                                             ),
-                                            const SizedBox(width: 12),
-                                            Text(
-                                              'Ask HandyBot',
+                                            child: Text(
+                                              _riskLabel(risk),
                                               style: GoogleFonts.inter(
-                                                fontSize: 17,
+                                                fontSize: 18,
                                                 fontWeight: FontWeight.w700,
                                                 color: Colors.white,
                                                 letterSpacing: 0.5,
                                               ),
                                             ),
-                                            const SizedBox(width: 8),
-                                            Icon(
-                                              Icons.arrow_forward_rounded,
-                                              color: Colors.white,
-                                              size: 22,
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
 
-                              const SizedBox(height: 20),
-                            ],
+                                    const SizedBox(height: 24),
+
+                                    // Recommendation Card
+                                    _buildInfoCard(
+                                      icon: Icons.lightbulb_rounded,
+                                      title: 'Recommendation',
+                                      content: recommendation,
+                                      color: Color(0xFF0288D1),
+                                    ),
+
+                                    const SizedBox(height: 16),
+
+                                    // Mental vs Chronological Age
+                                    _buildInfoCard(
+                                      icon: Icons.psychology_rounded,
+                                      title: 'Cognitive Assessment',
+                                      color: Color(0xFF1565C0),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: _buildAgeBar(
+                                              'Chronological',
+                                              chronoAge.toDouble(),
+                                              Color(0xFF1565C0),
+                                              '$chronoAge yrs',
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20),
+                                          Expanded(
+                                            child: _buildAgeBar(
+                                              'Mental Age',
+                                              mentalAge,
+                                              Color(0xFF0288D1),
+                                              '${mentalAge.toStringAsFixed(1)} yrs',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 16),
+
+                                    // IQ Score Card
+                                    _buildInfoCard(
+                                      icon: Icons.emoji_events_rounded,
+                                      title: 'IQ Score',
+                                      color: Color(0xFFFF9800),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '$iq',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 48,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFFFF9800),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Text(
+                                            '🧠',
+                                            style: TextStyle(fontSize: 36),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 32),
+
+                                    // Action Button
+                                    TweenAnimationBuilder<double>(
+                                      tween: Tween(begin: 0.95, end: 1.0),
+                                      duration: const Duration(
+                                        milliseconds: 200,
+                                      ),
+                                      curve: Curves.easeOut,
+                                      builder: (context, value, child) {
+                                        return Transform.scale(
+                                          scale: value,
+                                          child: Container(
+                                            height: 56,
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Color(0xFF1565C0),
+                                                  Color(0xFF0288D1),
+                                                ],
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(18),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Color(
+                                                    0xFF1565C0,
+                                                  ).withValues(alpha: 0.5),
+                                                  blurRadius: 20,
+                                                  offset: const Offset(0, 10),
+                                                ),
+                                              ],
+                                            ),
+                                            child: ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    '/handybot',
+                                                  ),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                shadowColor: Colors.transparent,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(18),
+                                                ),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    '🤖',
+                                                    style: TextStyle(
+                                                      fontSize: 24,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 12),
+                                                  Text(
+                                                    'Ask HandyBot',
+                                                    style: GoogleFonts.inter(
+                                                      fontSize: 17,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: Colors.white,
+                                                      letterSpacing: 0.5,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Icon(
+                                                    Icons.arrow_forward_rounded,
+                                                    color: Colors.white,
+                                                    size: 22,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+
+                                    const SizedBox(height: 20),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),

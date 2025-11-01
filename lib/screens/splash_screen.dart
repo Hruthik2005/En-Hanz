@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/modern_theme.dart';
+import '../services/auth_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -82,16 +83,23 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _waitAndNavigate() async {
     if (!mounted) return;
-    Navigator.pushReplacementNamed(context, '/profile');
+
+    // Check if user is logged in
+    final authService = AuthService();
+    if (authService.isLoggedIn) {
+      // User is logged in, go directly to home screen
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      // User is not logged in, go to login screen
+      Navigator.pushReplacementNamed(context, '/login');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: ModernTheme.blueBackgroundGradient,
-        ),
+        decoration: BoxDecoration(gradient: ModernTheme.blueBackgroundGradient),
         child: SafeArea(
           child: Center(
             child: !_fontsLoaded
@@ -141,9 +149,9 @@ class _SplashScreenState extends State<SplashScreen>
                                       ),
                                     ),
                                     child: ShaderMask(
-                                      shaderCallback: (bounds) =>
-                                          ModernTheme.primaryGradient
-                                              .createShader(bounds),
+                                      shaderCallback: (bounds) => ModernTheme
+                                          .primaryGradient
+                                          .createShader(bounds),
                                       child: Text(
                                         'En-HanZ',
                                         style: GoogleFonts.poppins(
@@ -173,8 +181,9 @@ class _SplashScreenState extends State<SplashScreen>
                                       vertical: 6,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: ModernTheme.primaryBlue
-                                          .withValues(alpha: 0.15),
+                                      color: ModernTheme.primaryBlue.withValues(
+                                        alpha: 0.15,
+                                      ),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
@@ -317,8 +326,9 @@ class _PulsingDotsState extends State<_PulsingDots>
                 height: 12,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: ModernTheme.primaryBlue
-                      .withValues(alpha: 0.2 + opacity * 0.8),
+                  color: ModernTheme.primaryBlue.withValues(
+                    alpha: 0.2 + opacity * 0.8,
+                  ),
                   boxShadow: ModernTheme.coloredShadow(
                     ModernTheme.primaryBlue,
                     opacity: 0.5 * opacity,

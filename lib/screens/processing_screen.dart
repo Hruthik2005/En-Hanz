@@ -1,10 +1,19 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../services/api_service.dart';
+import '../services/auth_service.dart';
+import '../services/report_service.dart';
+import '../services/iq_service.dart';
+import '../services/handwriting_service.dart';
+import '../services/ocr_dysgraphia_service.dart';
+import '../services/child_profile_service.dart';
+import '../models/iq_result_model.dart';
+import '../models/handwriting_analysis_model.dart';
 import '../state/app_state.dart';
 
 class ProcessingScreen extends StatefulWidget {
@@ -97,18 +106,115 @@ class _ProcessingScreenState extends State<ProcessingScreen>
     final iq = appState.iqScore;
     final mentalAge = appState.mentalAge;
 
-    final result = await ApiService.predict(
-      profile: profile,
-      iqScore: iq,
-      mentalAge: mentalAge,
-      imagePath: appState.handwritingImagePath,
-    );
+    // Use OCR-based handwriting analysis
+    Map<String, dynamic> result;
+    if (appState.handwritingImagePath != null &&
+        appState.handwritingImagePath!.isNotEmpty) {
+      try {
+        debugPrint('🔍 Analyzing handwriting with OCR...');
+        final imageFile = File(appState.handwritingImagePath!);
+        final ocrResult = await OCRDysgraphiaService.analyzeHandwriting(imageFile);
+        
+        result = {
+          'risk': ocrResult['riskScore'],
+          'recommendation': ocrResult['recommendation'],
+        };
+        
+        debugPrint(
+          '✅ OCR Analysis complete! Risk: ${ocrResult['riskPercentage']}% '
+          '(Confidence: ${(ocrResult['confidence'] * 100).toInt()}%)',
+        );
+      } catch (e) {
+        debugPrint('❌ OCR analysis error: $e');
+        // Fallback to basic prediction
+        result = await ApiService.predict(
+          profile: profile,
+          iqScore: iq,
+          mentalAge: mentalAge,
+          imagePath: appState.handwritingImagePath,
+        );
+      }
+    } else {
+      // No image, use basic prediction
+      result = await ApiService.predict(
+        profile: profile,
+        iqScore: iq,
+        mentalAge: mentalAge,
+        imagePath: appState.handwritingImagePath,
+      );
+    }
 
     _timer?.cancel();
     setState(() {
       _progress = 1.0;
       _currentTask = 'Analysis complete! ✓';
     });
+
+    // Save to Firebase
+    try {
+      final authService = AuthService();
+      final userId = authService.currentUserId;
+      final childProfileId = appState.selectedChildProfile?.id;
+
+      debugPrint('💾 Starting Firebase save...');
+      debugPrint('   userId: $userId');
+      debugPrint('   childProfileId: $childProfileId');
+
+      if (userId != null) {
+        // Save IQ result to Firebase
+        final iqService = IQService();
+        final iqResult = IQResultModel(
+          userId: userId,
+          childProfileId: childProfileId,
+          totalScore: iq,
+          mentalAge: mentalAge,
+          iqValue: (mentalAge / profile.age) * 100,
+          testDate: DateTime.now(),
+        );
+        final iqResultId = await iqService.saveIQResult(iqResult);
+        debugPrint('✅ IQ result saved: $iqResultId');
+
+        // Save handwriting analysis to Firebase
+        final handwritingService = HandwritingService();
+        final handwritingAnalysis = HandwritingAnalysisModel(
+          userId: userId,
+          childProfileId: childProfileId,
+          imageUrl: appState.handwritingImagePath ?? '',
+          riskScore: (result['risk'] as num).toDouble(),
+          recommendation: result['recommendation'] ?? '',
+          analyzedAt: DateTime.now(),
+        );
+        final handwritingId = await handwritingService.saveAnalysisResult(
+          handwritingAnalysis,
+        );
+        debugPrint('✅ Handwriting analysis saved: $handwritingId');
+
+        // Save comprehensive report to Firebase
+        final reportService = ReportService();
+        final reportId = await reportService.generateReport(
+          userId: userId,
+          childProfileId: childProfileId,
+          iqResultId: iqResultId,
+          handwritingId: handwritingId,
+        );
+        debugPrint('✅ Report generated: $reportId');
+
+        // Update child profile's last assessment date if child profile exists
+        if (childProfileId != null) {
+          final childProfileService = ChildProfileService();
+          await childProfileService.updateLastAssessmentDate(
+            childProfileId,
+            DateTime.now(),
+          );
+          debugPrint('✅ Updated last assessment date for child');
+        }
+
+        debugPrint('🎉 All data saved successfully to Firebase!');
+      }
+    } catch (e) {
+      debugPrint('❌ Error saving to Firebase: $e');
+    }
+
     // Save to state and navigate
     appState.saveResult(
       (result['risk'] as num).toDouble(),

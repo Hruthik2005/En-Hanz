@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'state/app_state.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/profile_screen.dart';
+import 'screens/child_profile_selection_screen.dart';
 import 'screens/iq_test_screen.dart';
 import 'screens/upload_screen.dart';
 import 'screens/drawing_screen.dart';
@@ -19,6 +20,8 @@ import 'screens/about_screen.dart';
 import 'screens/letter_tracing_game.dart';
 import 'screens/dot_join_game.dart';
 import 'screens/copy_word_game.dart';
+import 'screens/auth/login_screen.dart';
+import 'services/auth_service.dart';
 import 'utils/modern_theme.dart';
 
 class App extends StatelessWidget {
@@ -57,10 +60,24 @@ class App extends StatelessWidget {
           };
           return widget ?? const SizedBox.shrink();
         },
-        initialRoute: '/splash',
+        home: StreamBuilder(
+          stream: AuthService().authStateChanges,
+          builder: (context, snapshot) {
+            // Show splash screen while checking auth state
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SplashScreen();
+            }
+
+            // Always show splash screen first (it will auto-navigate)
+            // This provides a consistent branded experience
+            return const SplashScreen();
+          },
+        ),
         routes: {
           '/splash': (_) => const SplashScreen(),
-          '/': (_) => const OnboardingScreen(),
+          '/login': (_) => const LoginScreen(),
+          '/onboarding': (_) => const OnboardingScreen(),
+          '/child_selection': (_) => const ChildProfileSelectionScreen(),
           '/profile': (_) => const ProfileScreen(),
           '/iq': (_) => const IQTestScreen(),
           '/upload': (_) => const UploadScreen(),

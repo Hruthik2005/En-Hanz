@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/profile.dart';
+import '../models/child_profile_model.dart';
+import '../services/auth_service.dart';
+import '../services/child_profile_service.dart';
 import '../state/app_state.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -343,7 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   setState(() => _handedness = v ?? 'Right'),
                             ),
                             const SizedBox(height: 30),
-                            
+
                             // Validation Error Banner
                             if (_showValidationError)
                               Container(
@@ -378,7 +381,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ],
                                 ),
                               ),
-                            
+
                             TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0.95, end: 1.0),
                               duration: const Duration(milliseconds: 200),
@@ -407,42 +410,54 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ],
                                     ),
                                     child: ElevatedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         // Explicit check for empty name
                                         if (_nameCtrl.text.trim().isEmpty) {
                                           // Show validation error banner
                                           setState(() {
                                             _showValidationError = true;
                                           });
-                                          
+
                                           // Trigger form validation to show field error
                                           _formKey.currentState?.validate();
-                                          
+
                                           // Show error snackbar with more prominent styling
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
                                               content: Row(
                                                 children: [
-                                                  Icon(Icons.warning_amber_rounded, color: Colors.white, size: 24),
+                                                  Icon(
+                                                    Icons.warning_amber_rounded,
+                                                    color: Colors.white,
+                                                    size: 24,
+                                                  ),
                                                   const SizedBox(width: 12),
                                                   Expanded(
                                                     child: Text(
                                                       'Please enter the child\'s name',
                                                       style: GoogleFonts.inter(
-                                                        fontWeight: FontWeight.w600,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                         fontSize: 15,
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                              backgroundColor: Colors.red.shade600,
-                                              behavior: SnackBarBehavior.floating,
+                                              backgroundColor:
+                                                  Colors.red.shade600,
+                                              behavior:
+                                                  SnackBarBehavior.floating,
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(12),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
                                               margin: const EdgeInsets.all(16),
-                                              duration: const Duration(seconds: 3),
+                                              duration: const Duration(
+                                                seconds: 3,
+                                              ),
                                               action: SnackBarAction(
                                                 label: 'OK',
                                                 textColor: Colors.white,
@@ -450,29 +465,82 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               ),
                                             ),
                                           );
-                                          
+
                                           // Don't proceed
                                           return;
                                         }
-                                        
+
                                         // Clear validation error if name is provided
                                         setState(() {
                                           _showValidationError = false;
                                         });
-                                        
-                                        final profile = Profile(
-                                          name: _nameCtrl.text.trim(),
-                                          age: int.parse(_age),
-                                          schoolClass: _class,
-                                          gender: _gender,
-                                          disabilities: _disabilities.entries
-                                              .where((e) => e.value)
-                                              .map((e) => e.key)
-                                              .toList(),
-                                          handedness: _handedness,
-                                        );
-                                        appState.saveProfile(profile);
-                                        Navigator.pushNamed(context, '/iq');
+
+                                        // Create child profile and save to Firebase
+                                        final authService = AuthService();
+                                        final childProfileService =
+                                            ChildProfileService();
+                                        final userId =
+                                            authService.currentUserId;
+
+                                        if (userId != null) {
+                                          final childProfile =
+                                              ChildProfileModel(
+                                                teacherId: userId,
+                                                childName: _nameCtrl.text
+                                                    .trim(),
+                                                age: int.parse(_age),
+                                                schoolClass: _class,
+                                                gender: _gender,
+                                                disabilities: _disabilities
+                                                    .entries
+                                                    .where((e) => e.value)
+                                                    .map((e) => e.key)
+                                                    .toList(),
+                                                handedness: _handedness,
+                                                createdAt: DateTime.now(),
+                                              );
+
+                                          try {
+                                            final profileId =
+                                                await childProfileService
+                                                    .createChildProfile(
+                                                      childProfile,
+                                                    );
+                                            // Set the created profile as selected
+                                            appState.selectChildProfile(
+                                              childProfile.copyWith(
+                                                id: profileId,
+                                              ),
+                                            );
+
+                                            // Also save to legacy profile for compatibility
+                                            final profile = Profile(
+                                              name: _nameCtrl.text.trim(),
+                                              age: int.parse(_age),
+                                              schoolClass: _class,
+                                              gender: _gender,
+                                              disabilities: _disabilities
+                                                  .entries
+                                                  .where((e) => e.value)
+                                                  .map((e) => e.key)
+                                                  .toList(),
+                                              handedness: _handedness,
+                                            );
+                                            appState.saveProfile(profile);
+
+                                            Navigator.pushNamed(context, '/iq');
+                                          } catch (e) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Error saving profile: $e',
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.transparent,

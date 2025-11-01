@@ -24,8 +24,8 @@ class ApiService {
       'recommendation': risk > 0.7
           ? 'Consider targeted motor control exercises and professional evaluation.'
           : (risk > 0.4
-              ? 'Mild motor pattern irregularity — practice spacing and tracing.'
-              : 'No immediate concern — encourage daily handwriting practice.'),
+                ? 'Mild motor pattern irregularity — practice spacing and tracing.'
+                : 'No immediate concern — encourage daily handwriting practice.'),
     };
   }
 }

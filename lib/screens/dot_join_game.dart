@@ -11,38 +11,64 @@ class DotJoinGame extends StatefulWidget {
 
 class _DotJoinGameState extends State<DotJoinGame> {
   late ConfettiController _confettiController;
-  
+
   final List<Map<String, dynamic>> _patterns = [
-    {'name': 'A', 'dots': [
-      Offset(0.5, 0.2), Offset(0.3, 0.7), Offset(0.7, 0.7), Offset(0.4, 0.45), Offset(0.6, 0.45)
-    ]},
-    {'name': 'Triangle', 'dots': [
-      Offset(0.5, 0.2), Offset(0.2, 0.7), Offset(0.8, 0.7)
-    ]},
-    {'name': 'Square', 'dots': [
-      Offset(0.3, 0.3), Offset(0.7, 0.3), Offset(0.7, 0.7), Offset(0.3, 0.7)
-    ]},
-    {'name': 'Star', 'dots': [
-      Offset(0.5, 0.15), Offset(0.6, 0.4), Offset(0.82, 0.42), Offset(0.67, 0.58), 
-      Offset(0.72, 0.82), Offset(0.5, 0.68), Offset(0.28, 0.82), Offset(0.33, 0.58),
-      Offset(0.18, 0.42), Offset(0.4, 0.4)
-    ]},
+    {
+      'name': 'A',
+      'dots': [
+        Offset(0.5, 0.2),
+        Offset(0.3, 0.7),
+        Offset(0.7, 0.7),
+        Offset(0.4, 0.45),
+        Offset(0.6, 0.45),
+      ],
+    },
+    {
+      'name': 'Triangle',
+      'dots': [Offset(0.5, 0.2), Offset(0.2, 0.7), Offset(0.8, 0.7)],
+    },
+    {
+      'name': 'Square',
+      'dots': [
+        Offset(0.3, 0.3),
+        Offset(0.7, 0.3),
+        Offset(0.7, 0.7),
+        Offset(0.3, 0.7),
+      ],
+    },
+    {
+      'name': 'Star',
+      'dots': [
+        Offset(0.5, 0.15),
+        Offset(0.6, 0.4),
+        Offset(0.82, 0.42),
+        Offset(0.67, 0.58),
+        Offset(0.72, 0.82),
+        Offset(0.5, 0.68),
+        Offset(0.28, 0.82),
+        Offset(0.33, 0.58),
+        Offset(0.18, 0.42),
+        Offset(0.4, 0.4),
+      ],
+    },
   ];
 
   int _currentPatternIndex = 0;
   int _nextDotIndex = 0;
-  List<Offset> _connectedDots = [];
+  final List<Offset> _connectedDots = [];
   bool _isComplete = false;
   int _completionTime = 0;
   DateTime? _startTime;
-  List<int> _times = [];
+  final List<int> _times = [];
 
   Map<String, dynamic> get _currentPattern => _patterns[_currentPatternIndex];
 
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 2));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 2),
+    );
     _startTime = DateTime.now();
   }
 
@@ -85,11 +111,11 @@ class _DotJoinGameState extends State<DotJoinGame> {
   void _completePattern() {
     _completionTime = DateTime.now().difference(_startTime!).inSeconds;
     _times.add(_completionTime);
-    
+
     setState(() {
       _isComplete = true;
     });
-    
+
     _confettiController.play();
 
     Future.delayed(const Duration(seconds: 2), () {
@@ -116,8 +142,10 @@ class _DotJoinGameState extends State<DotJoinGame> {
   }
 
   void _showResults() {
-    double avgTime = _times.isEmpty ? 0 : _times.reduce((a, b) => a + b) / _times.length;
-    
+    double avgTime = _times.isEmpty
+        ? 0
+        : _times.reduce((a, b) => a + b) / _times.length;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -163,8 +191,8 @@ class _DotJoinGameState extends State<DotJoinGame> {
                 avgTime < 15
                     ? "Super fast! Great motor control! 🚀"
                     : avgTime < 30
-                        ? "Good coordination! Keep practicing! 💪"
-                        : "You're improving! Try again! 🎯",
+                    ? "Good coordination! Keep practicing! 💪"
+                    : "You're improving! Try again! 🎯",
                 style: GoogleFonts.inter(fontSize: 14),
                 textAlign: TextAlign.center,
               ),
@@ -208,7 +236,7 @@ class _DotJoinGameState extends State<DotJoinGame> {
   @override
   Widget build(BuildContext context) {
     List<Offset> dots = List<Offset>.from(_currentPattern['dots']);
-    
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -227,7 +255,10 @@ class _DotJoinGameState extends State<DotJoinGame> {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back_rounded, color: Color(0xFF0277BD)),
+                      icon: Icon(
+                        Icons.arrow_back_rounded,
+                        color: Color(0xFF0277BD),
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                     Expanded(
@@ -254,7 +285,10 @@ class _DotJoinGameState extends State<DotJoinGame> {
                     ),
                     if (!_isComplete)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -341,16 +375,27 @@ class _DotJoinGameState extends State<DotJoinGame> {
                         child: LayoutBuilder(
                           builder: (context, constraints) {
                             return CustomPaint(
-                              size: Size(constraints.maxWidth, constraints.maxHeight),
-                              painter: DotPatternPainter(dots, _connectedDots, _isComplete),
+                              size: Size(
+                                constraints.maxWidth,
+                                constraints.maxHeight,
+                              ),
+                              painter: DotPatternPainter(
+                                dots,
+                                _connectedDots,
+                                _isComplete,
+                              ),
                               child: Stack(
                                 children: List.generate(dots.length, (index) {
                                   bool isConnected = index < _nextDotIndex;
                                   bool isCurrent = index == _nextDotIndex;
-                                  
+
                                   return Positioned(
-                                    left: dots[index].dx * constraints.maxWidth - 25,
-                                    top: dots[index].dy * constraints.maxHeight - 25,
+                                    left:
+                                        dots[index].dx * constraints.maxWidth -
+                                        25,
+                                    top:
+                                        dots[index].dy * constraints.maxHeight -
+                                        25,
                                     child: GestureDetector(
                                       onTap: () => _onDotTapped(index),
                                       child: Container(
@@ -361,16 +406,19 @@ class _DotJoinGameState extends State<DotJoinGame> {
                                           color: isConnected
                                               ? Colors.green
                                               : isCurrent
-                                                  ? Color(0xFF0277BD)
-                                                  : Colors.grey[300],
+                                              ? Color(0xFF0277BD)
+                                              : Colors.grey[300],
                                           border: Border.all(
-                                            color: isCurrent ? Colors.orange : Colors.white,
+                                            color: isCurrent
+                                                ? Colors.orange
+                                                : Colors.white,
                                             width: isCurrent ? 3 : 2,
                                           ),
                                           boxShadow: [
                                             if (isCurrent)
                                               BoxShadow(
-                                                color: Colors.orange.withOpacity(0.5),
+                                                color: Colors.orange
+                                                    .withOpacity(0.5),
                                                 blurRadius: 10,
                                                 spreadRadius: 2,
                                               ),
@@ -407,7 +455,13 @@ class _DotJoinGameState extends State<DotJoinGame> {
                         emissionFrequency: 0.05,
                         numberOfParticles: 50,
                         gravity: 0.1,
-                        colors: [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple],
+                        colors: [
+                          Colors.green,
+                          Colors.blue,
+                          Colors.pink,
+                          Colors.orange,
+                          Colors.purple,
+                        ],
                       ),
                     ),
 
@@ -417,7 +471,10 @@ class _DotJoinGameState extends State<DotJoinGame> {
                         color: Colors.black.withOpacity(0.3),
                         child: Center(
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40,
+                              vertical: 24,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(24),
@@ -431,10 +488,7 @@ class _DotJoinGameState extends State<DotJoinGame> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  '🎉',
-                                  style: TextStyle(fontSize: 64),
-                                ),
+                                Text('🎉', style: TextStyle(fontSize: 64)),
                                 const SizedBox(height: 16),
                                 Text(
                                   'Perfect!',
@@ -501,7 +555,10 @@ class _DotJoinGameState extends State<DotJoinGame> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF0277BD),
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 48),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 48,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -510,7 +567,10 @@ class _DotJoinGameState extends State<DotJoinGame> {
                       _currentPatternIndex < _patterns.length - 1
                           ? 'Next Pattern'
                           : 'Finish',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

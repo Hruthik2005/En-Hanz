@@ -18,44 +18,126 @@ class _IQTestScreenState extends State<IQTestScreen>
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  List<Map<String, dynamic>> _questions = [];
+  int _childAge = 8; // Default, will be loaded from profile
 
-  final List<Map<String, dynamic>> _questions = [
+  // Age Group 1: 5-7 Years (Beginner Level)
+  final List<Map<String, dynamic>> _questions_5_7 = [
     {
       'question': 'What comes next in the pattern?',
-      'pattern': '🟦 🔴 🟩 🟦 🔴 🟩 🟦 ❓',
-      'options': ['🟨', '🔴', '🟩', '🟦'],
-      'correct': '🔴',
-      'explanation':
-          'The pattern repeats every three symbols (blue, red, green).',
+      'pattern': ' �  � � ❓',
+      'options': ['�', '�', '�', '�'],
+      'correct': '�',
+      'explanation': 'Alternating color pattern (red, yellow, red, yellow).',
     },
     {
-      'question': 'What number comes next?',
-      'pattern': '2, 4, 8, 16, ❓',
-      'options': ['18', '24', '32', '34'],
-      'correct': '32',
-      'explanation': 'Each number doubles the previous one (×2 pattern).',
+      'question': 'What comes next?',
+      'pattern': '🐶🐶🐱🐶🐶🐱🐶🐶❓',
+      'options': ['🐱', '🐶', '🐰', '🐭'],
+      'correct': '🐱',
+      'explanation': 'Every 3rd animal is a cat.',
     },
     {
-      'question': 'Which one doesn\'t belong?',
-      'pattern': 'Square  Circle  Triangle  Car',
-      'options': ['Square', 'Circle', 'Triangle', 'Car'],
-      'correct': 'Car',
-      'explanation': 'The first three are geometric shapes; "Car" is not.',
+      'question': 'What comes next in the pattern?',
+      'pattern': '🔺 ⬛ 🔺 ⬛ ❓',
+      'options': ['🔺', '⬛', '⚪', '🟢'],
+      'correct': '🔺',
+      'explanation': 'Alternates triangle and square.',
+    },
+    {
+      'question': 'What comes next?',
+      'pattern': '🔵 ⚫ ⚫ 🔵 ⚫ ⚫ ❓',
+      'options': ['🔵', '⚫', '🟤', '🟢'],
+      'correct': '🔵',
+      'explanation': 'Every third circle is blue.',
     },
     {
       'question': 'Complete the analogy',
       'pattern': 'Sun : Day :: Moon : ❓',
-      'options': ['Light', 'Night', 'Star', 'Dark'],
+      'options': ['Light', 'Cold', 'Night', 'Star'],
       'correct': 'Night',
-      'explanation': 'The sun appears during day, the moon during night.',
+      'explanation': 'Moon comes in night, just like sun comes in day.',
+    },
+  ];
+
+  // Age Group 2: 8-10 Years (Intermediate Level)
+  final List<Map<String, dynamic>> _questions_8_10 = [
+    {
+      'question': 'What number comes next?',
+      'pattern': '3, 6, 9, 12, ❓',
+      'options': ['13', '14', '15', '16'],
+      'correct': '15',
+      'explanation': 'Increases by 3 each time.',
+    },
+    {
+      'question': 'Which one doesn\'t belong?',
+      'pattern': 'Car  Bike  Bus  Apple',
+      'options': ['Car', 'Bike', 'Bus', 'Apple'],
+      'correct': 'Apple',
+      'explanation': 'Car, Bike, and Bus are vehicles. Apple is not.',
     },
     {
       'question': 'What comes next in the pattern?',
       'pattern': '🔺 ⬛ ⬟ ❓',
-      'options': ['🔶', '⬣', '⚫', '🔵'],
+      'options': ['⬣', '🔵', '⬢', '⚫'],
       'correct': '⬣',
       'explanation':
-          'The pattern increases the number of sides in each shape — Triangle (3) → Square (4) → Pentagon (5) → Hexagon (6).',
+          'Shape sides increase — Triangle (3) → Square (4) → Pentagon (5) → Hexagon (6).',
+    },
+    {
+      'question': 'Complete the analogy',
+      'pattern': 'Bird : Fly :: Fish : ❓',
+      'options': ['Swim', 'Walk', 'Float', 'Jump'],
+      'correct': 'Swim',
+      'explanation': 'Birds fly, fish swim.',
+    },
+    {
+      'question': 'What comes next in the pattern?',
+      'pattern': '🟦 🔴 🟩 🟦 🔴 🟩 🟦 ❓',
+      'options': ['🟩', '🔴', '🟨', '🔵'],
+      'correct': '🔴',
+      'explanation': 'Repeats every 3 colors (blue, red, green).',
+    },
+  ];
+
+  // Age Group 3: 11-13 Years (Advanced Level)
+  final List<Map<String, dynamic>> _questions_11_13 = [
+    {
+      'question': 'What number comes next?',
+      'pattern': '2, 6, 12, 20, 30, ❓',
+      'options': ['36', '40', '42', '44'],
+      'correct': '42',
+      'explanation':
+          'Difference increases by +2 each time (+4, +6, +8, +10, +12).',
+    },
+    {
+      'question': 'What comes next in the pattern?',
+      'pattern': '🔺🔵 🔺🔵 🔺🔵 🔺❓',
+      'options': ['🟩', '🔺', '⬛', '🔵'],
+      'correct': '🔵',
+      'explanation': 'Pattern repeats every pair (triangle + blue circle).',
+    },
+    {
+      'question': 'Complete the analogy',
+      'pattern': 'Teacher : School :: Doctor : ❓',
+      'options': ['Hospital', 'Patient', 'Nurse', 'Clinic'],
+      'correct': 'Hospital',
+      'explanation': 'Teachers work in schools, doctors work in hospitals.',
+    },
+    {
+      'question': 'What is the result?',
+      'pattern': '5 → 25, 6 → 36, 7 → ❓',
+      'options': ['48', '49', '50', '54'],
+      'correct': '49',
+      'explanation': 'Each number is squared (5×5=25, 6×6=36, 7×7=49).',
+    },
+    {
+      'question': 'What comes next in the pattern?',
+      'pattern': '🔵 ⚫ 🔵 ⚫ ⚫ 🔵 ⚫ ❓',
+      'options': ['🔵', '⚫', '🔴', '🟣'],
+      'correct': '🔵',
+      'explanation':
+          'Hidden 3-2-2 repetition pattern (blue-black-blue-black-black).',
     },
   ];
 
@@ -73,7 +155,36 @@ class _IQTestScreenState extends State<IQTestScreen>
         Tween<Offset>(begin: const Offset(0.15, 0), end: Offset.zero).animate(
           CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
         );
+
+    // Load age from profile and select appropriate questions
+    _loadAgeAndQuestions();
+
     _animController.forward();
+  }
+
+  void _loadAgeAndQuestions() {
+    final appState = Provider.of<AppState>(context, listen: false);
+    _childAge = appState.profile?.age ?? 8;
+
+    // Select questions based on age group
+    if (_childAge >= 5 && _childAge <= 7) {
+      _questions = List.from(_questions_5_7);
+      debugPrint('✅ Selected age group: 5-7 years (Beginner)');
+    } else if (_childAge >= 8 && _childAge <= 10) {
+      _questions = List.from(_questions_8_10);
+      debugPrint('✅ Selected age group: 8-10 years (Intermediate)');
+    } else if (_childAge >= 11 && _childAge <= 13) {
+      _questions = List.from(_questions_11_13);
+      debugPrint('✅ Selected age group: 11-13 years (Advanced)');
+    } else {
+      // Default to intermediate for ages outside range
+      _questions = List.from(_questions_8_10);
+      debugPrint(
+        '⚠️ Age $_childAge outside range, using intermediate questions',
+      );
+    }
+
+    debugPrint('📊 Loaded ${_questions.length} questions for age $_childAge');
   }
 
   @override
@@ -118,11 +229,43 @@ class _IQTestScreenState extends State<IQTestScreen>
   }
 
   void _showResults() {
-    final iq = (_score * 2) + 60; // Formula: (TotalScore × 2) + 60
+    // Calculate IQ using accurate formula
+    final maxScore = _questions.length * 10; // Each correct answer = 10 points
+    final iq = (60 + ((_score / maxScore) * 70)).round();
+
+    // Calculate mental age
+    final mentalAge = (iq / 100) * _childAge;
+
+    // Determine IQ category
+    String iqCategory;
+    String iqDescription;
+    if (iq >= 130) {
+      iqCategory = 'Exceptional';
+      iqDescription = 'Advanced analytical ability';
+    } else if (iq >= 115) {
+      iqCategory = 'High';
+      iqDescription = 'Excellent logical ability';
+    } else if (iq >= 100) {
+      iqCategory = 'Above Average';
+      iqDescription = 'Good reasoning skills';
+    } else if (iq >= 85) {
+      iqCategory = 'Average';
+      iqDescription = 'Normal range';
+    } else {
+      iqCategory = 'Below Average';
+      iqDescription = 'Needs learning support';
+    }
+
+    // Save to app state
     final appState = Provider.of<AppState>(context, listen: false);
-    final age = appState.profile?.age ?? 8;
-    final mentalAge = (iq / 100) * age;
     appState.saveIQ(iq, mentalAge);
+
+    // Log results for debugging
+    debugPrint('📊 IQ Test Results:');
+    debugPrint('   Age: $_childAge years');
+    debugPrint('   Score: $_score / $maxScore');
+    debugPrint('   IQ: $iq ($iqCategory)');
+    debugPrint('   Mental Age: ${mentalAge.toStringAsFixed(1)} years');
 
     showDialog(
       context: context,
@@ -224,12 +367,88 @@ class _IQTestScreenState extends State<IQTestScreen>
                         ],
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        'Mental Age: ${mentalAge.toStringAsFixed(1)} years',
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: Colors.grey.shade600,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
                         ),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF1565C0), Color(0xFF0288D1)],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          iqCategory,
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        iqDescription,
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      Divider(color: Colors.grey.shade300),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                'Your Age',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  color: Colors.grey.shade500,
+                                ),
+                              ),
+                              Text(
+                                '$_childAge yrs',
+                                style: GoogleFonts.inter(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 24),
+                          Container(
+                            width: 1,
+                            height: 30,
+                            color: Colors.grey.shade300,
+                          ),
+                          const SizedBox(width: 24),
+                          Column(
+                            children: [
+                              Text(
+                                'Mental Age',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  color: Colors.grey.shade500,
+                                ),
+                              ),
+                              Text(
+                                '${mentalAge.toStringAsFixed(1)} yrs',
+                                style: GoogleFonts.inter(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF1565C0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),

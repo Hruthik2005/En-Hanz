@@ -1,5 +1,5 @@
 class AppStrings {
-  static Map<String, Map<String, String>> _strings = {
+  static final Map<String, Map<String, String>> _strings = {
     'English': {
       // Home Screen
       'home_title': 'En-HanZ',
@@ -14,7 +14,7 @@ class AppStrings {
       'about': 'About',
       'recent_activity': 'Recent Activity',
       'no_recent_activity': 'No recent assessments',
-      
+
       // Profile Screen
       'profile_title': 'Create Your Profile',
       'profile_subtitle': 'Let\'s get to know you better!',
@@ -36,7 +36,7 @@ class AppStrings {
       'school_required': 'Please enter your school name',
       'contact_required': 'Please enter guardian\'s contact',
       'contact_invalid': 'Please enter a valid 10-digit mobile number',
-      
+
       // IQ Test Screen
       'iq_test_title': 'Quick IQ Assessment',
       'iq_test_subtitle': 'Answer these fun questions! No pressure 😊',
@@ -45,7 +45,7 @@ class AppStrings {
       'next': 'Next',
       'finish': 'Finish',
       'select_answer': 'Please select an answer',
-      
+
       // Upload Screen
       'upload_title': 'Upload Handwriting Sample',
       'upload_subtitle': 'Choose how you want to provide your writing',
@@ -57,7 +57,7 @@ class AppStrings {
       'draw_desc': 'Draw directly on screen',
       'submit': 'Submit for Analysis',
       'upload_image_first': 'Please upload an image first',
-      
+
       // Processing Screen
       'processing_title': 'Analyzing Your Handwriting',
       'processing_subtitle': 'Our AI is working its magic...',
@@ -66,7 +66,7 @@ class AppStrings {
       'checking_alignment': 'Checking baseline alignment',
       'detecting_pressure': 'Detecting pressure variations',
       'calculating_risk': 'Calculating risk assessment',
-      
+
       // Results Screen
       'results_title': 'Assessment Results',
       'dysgraphia_risk': 'Dysgraphia Risk',
@@ -78,13 +78,13 @@ class AppStrings {
       'view_detailed_report': 'View Detailed Report',
       'talk_to_handybot': 'Talk to HandyBot',
       'back_home': 'Back to Home',
-      
+
       // HandyBot Screen
       'handybot_title': 'HandyBot AI Chat',
       'type_message': 'Type your message...',
       'voice_enabled': 'Voice enabled',
       'voice_disabled': 'Voice disabled',
-      
+
       // Practice Zone
       'practice_title': 'Practice Zone',
       'practice_subtitle': 'Fun activities to improve your handwriting',
@@ -96,7 +96,7 @@ class AppStrings {
       'accuracy': 'Accuracy',
       'day_streak': 'Day Streak',
       'handybot_tip': 'HandyBot\'s Daily Tip',
-      
+
       // History Screen
       'history_title': 'Assessment History',
       'no_assessments': 'No Assessments Yet',
@@ -106,7 +106,7 @@ class AppStrings {
       'time': 'Time',
       'risk_level': 'Risk Level',
       'recommendation': 'Recommendation',
-      
+
       // Settings Screen
       'settings_title': 'Settings',
       'language_settings': 'Language',
@@ -120,45 +120,59 @@ class AppStrings {
       'notifications_desc': 'Receive practice reminders and tips',
       'data_management': 'Data Management',
       'clear_data': 'Clear All Data',
-      'clear_data_confirm': 'Are you sure you want to clear all data? This will remove your profile and all assessments.',
+      'clear_data_confirm':
+          'Are you sure you want to clear all data? This will remove your profile and all assessments.',
       'yes': 'Yes',
       'no': 'No',
       'all_data_cleared': 'All data cleared successfully',
       'start_fresh': 'Start Fresh',
       'language_changed': 'Language changed to',
-      
+
       // About Screen
       'about_title': 'About En-HanZ',
       'app_purpose': 'App Purpose',
-      'purpose_desc': 'En-HanZ uses AI to detect early signs of dysgraphia in children through handwriting analysis, providing personalized recommendations and practice exercises.',
+      'purpose_desc':
+          'En-HanZ uses AI to detect early signs of dysgraphia in children through handwriting analysis, providing personalized recommendations and practice exercises.',
       'hackathon_title': 'Smart India Hackathon 2025',
-      'hackathon_desc': 'This app was developed as part of SIH 2025 to address the challenge of early dysgraphia detection in schools.',
+      'hackathon_desc':
+          'This app was developed as part of SIH 2025 to address the challenge of early dysgraphia detection in schools.',
       'key_features': 'Key Features',
       'feature_1': 'AI-powered handwriting analysis',
       'feature_2': 'Personalized recommendations',
       'feature_3': 'Interactive practice exercises',
       'feature_4': 'Progress tracking and history',
       'privacy_title': 'Privacy Notice',
-      'privacy_desc': 'Your handwriting samples and personal data are stored securely on your device. We do not share any information with third parties.',
+      'privacy_desc':
+          'Your handwriting samples and personal data are stored securely on your device. We do not share any information with third parties.',
       'version': 'Version',
       'copyright': '© 2025 En-HanZ Team. All rights reserved.',
       'contact_us': 'Contact Us',
       'support': 'Support',
-      
+
       // HandyBot Messages
-      'bot_greeting': "Hi {name}! I've analyzed your writing and have something to share 🤖✨",
-      'bot_low_risk_1': "Awesome job, {name}! Your writing looks clear and confident 💪\n\nYour handwriting shows great control and consistency. You're doing really well!",
-      'bot_low_risk_2': "Keep practicing one page a day — you're on track for greatness 🌟\n\nHere are some tips to stay sharp:\n\n✏️ Try writing slower to maintain that beautiful clarity\n📚 Practice writing stories — it's fun and helps!",
-      'bot_moderate_risk_1': "I've looked at your writing carefully, {name} 👀\n\nI noticed a few spacing and alignment patterns — but that's totally fixable! ✏️ You're already improving, and I can see your effort 💪",
-      'bot_moderate_risk_2': "Here are some super helpful tips:\n\n📝 Try tracing letters on dotted sheets daily\n✋ Practice finger exercises to build hand strength\n📏 Use lined paper to keep your letters even\n\nYou're doing great, {name}! Keep going 💬",
-      'bot_high_risk_1': "Hey {name}, I see you're finding writing a bit tough — but don't worry, I'm here with you 🤝\n\nWriting can be challenging, but every expert started as a beginner! Let's work together on hand strength and letter shapes — we'll get better step by step 🎯",
-      'bot_high_risk_2': "Here's what we'll focus on:\n\n🖐️ Hand strengthening exercises (squeeze a soft ball daily)\n🔤 Letter tracing with thick crayons or pencils\n⏰ Short 10-minute practice sessions (no pressure!)\n🎮 Fun writing games to make it enjoyable\n\nRemember: progress, not perfection! You've got this 💖",
-      'bot_summary': "📊 Here's your quick summary:\n\n• Risk Level: {risk}\n• IQ Score: {iq}\n• Focus Area: {focus}",
-      'bot_closing': "I'm always here if you need help or encouragement! Just tap the chat icon anytime 🤖💙\n\nReady to practice? Let's go! 🚀",
+      'bot_greeting':
+          "Hi {name}! I've analyzed your writing and have something to share 🤖✨",
+      'bot_low_risk_1':
+          "Awesome job, {name}! Your writing looks clear and confident 💪\n\nYour handwriting shows great control and consistency. You're doing really well!",
+      'bot_low_risk_2':
+          "Keep practicing one page a day — you're on track for greatness 🌟\n\nHere are some tips to stay sharp:\n\n✏️ Try writing slower to maintain that beautiful clarity\n📚 Practice writing stories — it's fun and helps!",
+      'bot_moderate_risk_1':
+          "I've looked at your writing carefully, {name} 👀\n\nI noticed a few spacing and alignment patterns — but that's totally fixable! ✏️ You're already improving, and I can see your effort 💪",
+      'bot_moderate_risk_2':
+          "Here are some super helpful tips:\n\n📝 Try tracing letters on dotted sheets daily\n✋ Practice finger exercises to build hand strength\n📏 Use lined paper to keep your letters even\n\nYou're doing great, {name}! Keep going 💬",
+      'bot_high_risk_1':
+          "Hey {name}, I see you're finding writing a bit tough — but don't worry, I'm here with you 🤝\n\nWriting can be challenging, but every expert started as a beginner! Let's work together on hand strength and letter shapes — we'll get better step by step 🎯",
+      'bot_high_risk_2':
+          "Here's what we'll focus on:\n\n🖐️ Hand strengthening exercises (squeeze a soft ball daily)\n🔤 Letter tracing with thick crayons or pencils\n⏰ Short 10-minute practice sessions (no pressure!)\n🎮 Fun writing games to make it enjoyable\n\nRemember: progress, not perfection! You've got this 💖",
+      'bot_summary':
+          "📊 Here's your quick summary:\n\n• Risk Level: {risk}\n• IQ Score: {iq}\n• Focus Area: {focus}",
+      'bot_closing':
+          "I'm always here if you need help or encouragement! Just tap the chat icon anytime 🤖💙\n\nReady to practice? Let's go! 🚀",
       'focus_low': 'Maintain consistency',
       'focus_moderate': 'Spacing & alignment',
       'focus_high': 'Hand strength & letter formation',
-      'bot_tips': "Here's a pro tip: Hold your pencil about 1 inch from the tip for better control!",
+      'bot_tips':
+          "Here's a pro tip: Hold your pencil about 1 inch from the tip for better control!",
       'bot_practice': "Great! Opening your practice zone now...",
       'bot_report': "Loading your detailed report...",
     },
@@ -176,7 +190,7 @@ class AppStrings {
       'about': 'हमारे बारे में',
       'recent_activity': 'हालिया गतिविधि',
       'no_recent_activity': 'कोई हालिया मूल्यांकन नहीं',
-      
+
       // Profile Screen
       'profile_title': 'अपनी प्रोफ़ाइल बनाएं',
       'profile_subtitle': 'आइए आपको बेहतर तरीके से जानें!',
@@ -198,7 +212,7 @@ class AppStrings {
       'school_required': 'कृपया अपने स्कूल का नाम दर्ज करें',
       'contact_required': 'कृपया अभिभावक का संपर्क दर्ज करें',
       'contact_invalid': 'कृपया मान्य 10-अंकीय मोबाइल नंबर दर्ज करें',
-      
+
       // IQ Test Screen
       'iq_test_title': 'त्वरित IQ मूल्यांकन',
       'iq_test_subtitle': 'इन मजेदार सवालों का जवाब दें! कोई दबाव नहीं 😊',
@@ -207,7 +221,7 @@ class AppStrings {
       'next': 'अगला',
       'finish': 'समाप्त',
       'select_answer': 'कृपया एक उत्तर चुनें',
-      
+
       // Upload Screen
       'upload_title': 'हस्तलेखन नमूना अपलोड करें',
       'upload_subtitle': 'चुनें कि आप अपना लेखन कैसे प्रदान करना चाहते हैं',
@@ -219,7 +233,7 @@ class AppStrings {
       'draw_desc': 'सीधे स्क्रीन पर ड्रा करें',
       'submit': 'विश्लेषण के लिए जमा करें',
       'upload_image_first': 'कृपया पहले एक छवि अपलोड करें',
-      
+
       // Processing Screen
       'processing_title': 'आपके हस्तलेखन का विश्लेषण',
       'processing_subtitle': 'हमारा AI अपना जादू चला रहा है...',
@@ -228,7 +242,7 @@ class AppStrings {
       'checking_alignment': 'बेसलाइन संरेखण जांच रहे हैं',
       'detecting_pressure': 'दबाव विविधताओं का पता लगा रहे हैं',
       'calculating_risk': 'जोखिम मूल्यांकन की गणना',
-      
+
       // Results Screen
       'results_title': 'मूल्यांकन परिणाम',
       'dysgraphia_risk': 'डिस्ग्राफिया जोखिम',
@@ -240,16 +254,17 @@ class AppStrings {
       'view_detailed_report': 'विस्तृत रिपोर्ट देखें',
       'talk_to_handybot': 'हैंडीबॉट से बात करें',
       'back_home': 'होम पर वापस',
-      
+
       // HandyBot Screen
       'handybot_title': 'हैंडीबॉट AI चैट',
       'type_message': 'अपना संदेश टाइप करें...',
       'voice_enabled': 'आवाज सक्षम',
       'voice_disabled': 'आवाज अक्षम',
-      
+
       // Practice Zone
       'practice_title': 'अभ्यास क्षेत्र',
-      'practice_subtitle': 'अपने हस्तलेखन को बेहतर बनाने के लिए मजेदार गतिविधियाँ',
+      'practice_subtitle':
+          'अपने हस्तलेखन को बेहतर बनाने के लिए मजेदार गतिविधियाँ',
       'letter_tracing': 'अक्षर ट्रेसिंग',
       'dot_joining': 'डॉट जोड़ना',
       'copy_words': 'शब्द कॉपी करें',
@@ -258,17 +273,18 @@ class AppStrings {
       'accuracy': 'सटीकता',
       'day_streak': 'दिन की लकीर',
       'handybot_tip': 'हैंडीबॉट का दैनिक टिप',
-      
+
       // History Screen
       'history_title': 'मूल्यांकन इतिहास',
       'no_assessments': 'अभी तक कोई मूल्यांकन नहीं',
-      'start_first_test': 'यहां परिणाम देखने के लिए अपना पहला परीक्षण शुरू करें',
+      'start_first_test':
+          'यहां परिणाम देखने के लिए अपना पहला परीक्षण शुरू करें',
       'assessment_details': 'मूल्यांकन विवरण',
       'date': 'तारीख',
       'time': 'समय',
       'risk_level': 'जोखिम स्तर',
       'recommendation': 'सिफारिश',
-      
+
       // Settings Screen
       'settings_title': 'सेटिंग्स',
       'language_settings': 'भाषा',
@@ -282,45 +298,59 @@ class AppStrings {
       'notifications_desc': 'अभ्यास अनुस्मारक और टिप्स प्राप्त करें',
       'data_management': 'डेटा प्रबंधन',
       'clear_data': 'सभी डेटा साफ़ करें',
-      'clear_data_confirm': 'क्या आप वाकई सभी डेटा साफ़ करना चाहते हैं? इससे आपकी प्रोफ़ाइल और सभी मूल्यांकन हट जाएंगे।',
+      'clear_data_confirm':
+          'क्या आप वाकई सभी डेटा साफ़ करना चाहते हैं? इससे आपकी प्रोफ़ाइल और सभी मूल्यांकन हट जाएंगे।',
       'yes': 'हाँ',
       'no': 'नहीं',
       'all_data_cleared': 'सभी डेटा सफलतापूर्वक साफ़ हो गया',
       'start_fresh': 'नई शुरुआत करें',
       'language_changed': 'भाषा बदलकर हो गई',
-      
+
       // About Screen
       'about_title': 'En-HanZ के बारे में',
       'app_purpose': 'ऐप का उद्देश्य',
-      'purpose_desc': 'En-HanZ हस्तलेखन विश्लेषण के माध्यम से बच्चों में डिस्ग्राफिया के शुरुआती संकेतों का पता लगाने के लिए AI का उपयोग करता है, व्यक्तिगत सिफारिशें और अभ्यास प्रदान करता है।',
+      'purpose_desc':
+          'En-HanZ हस्तलेखन विश्लेषण के माध्यम से बच्चों में डिस्ग्राफिया के शुरुआती संकेतों का पता लगाने के लिए AI का उपयोग करता है, व्यक्तिगत सिफारिशें और अभ्यास प्रदान करता है।',
       'hackathon_title': 'स्मार्ट इंडिया हैकथॉन 2025',
-      'hackathon_desc': 'यह ऐप SIH 2025 के भाग के रूप में स्कूलों में शुरुआती डिस्ग्राफिया पहचान की चुनौती का समाधान करने के लिए विकसित किया गया था।',
+      'hackathon_desc':
+          'यह ऐप SIH 2025 के भाग के रूप में स्कूलों में शुरुआती डिस्ग्राफिया पहचान की चुनौती का समाधान करने के लिए विकसित किया गया था।',
       'key_features': 'मुख्य विशेषताएं',
       'feature_1': 'AI-संचालित हस्तलेखन विश्लेषण',
       'feature_2': 'व्यक्तिगत सिफारिशें',
       'feature_3': 'इंटरैक्टिव अभ्यास',
       'feature_4': 'प्रगति ट्रैकिंग और इतिहास',
       'privacy_title': 'गोपनीयता सूचना',
-      'privacy_desc': 'आपके हस्तलेखन नमूने और व्यक्तिगत डेटा आपके डिवाइस पर सुरक्षित रूप से संग्रहीत हैं। हम किसी भी जानकारी को तीसरे पक्ष के साथ साझा नहीं करते हैं।',
+      'privacy_desc':
+          'आपके हस्तलेखन नमूने और व्यक्तिगत डेटा आपके डिवाइस पर सुरक्षित रूप से संग्रहीत हैं। हम किसी भी जानकारी को तीसरे पक्ष के साथ साझा नहीं करते हैं।',
       'version': 'संस्करण',
       'copyright': '© 2025 En-HanZ टीम। सर्वाधिकार सुरक्षित।',
       'contact_us': 'हमसे संपर्क करें',
       'support': 'सहायता',
-      
+
       // HandyBot Messages
-      'bot_greeting': "नमस्ते {name}! मैंने आपके लेखन का विश्लेषण किया है और कुछ बताना चाहता हूं 🤖✨",
-      'bot_low_risk_1': "शानदार काम, {name}! आपका लेखन स्पष्ट और आत्मविश्वास से भरा दिख रहा है 💪\n\nआपकी हस्तलेखन में बेहतरीन नियंत्रण और स्थिरता है। आप बहुत अच्छा कर रहे हैं!",
-      'bot_low_risk_2': "रोजाना एक पेज अभ्यास करते रहें — आप महानता की ओर बढ़ रहे हैं 🌟\n\nतेज रहने के लिए कुछ टिप्स:\n\n✏️ उस सुंदर स्पष्टता को बनाए रखने के लिए धीरे लिखने का प्रयास करें\n📚 कहानियां लिखने का अभ्यास करें — यह मजेदार है और मदद करता है!",
-      'bot_moderate_risk_1': "मैंने आपके लेखन को ध्यान से देखा है, {name} 👀\n\nमुझे कुछ स्पेसिंग और संरेखण पैटर्न दिखे — लेकिन यह पूरी तरह से ठीक किया जा सकता है! ✏️ आप पहले से सुधार कर रहे हैं, और मैं आपके प्रयास देख सकता हूं 💪",
-      'bot_moderate_risk_2': "यहां कुछ बहुत उपयोगी टिप्स हैं:\n\n📝 रोजाना डॉटेड शीट पर अक्षरों को ट्रेस करने का प्रयास करें\n✋ हाथ की ताकत बनाने के लिए उंगली व्यायाम करें\n📏 अक्षरों को समान रखने के लिए लाइन वाले कागज का उपयोग करें\n\nआप बहुत अच्छा कर रहे हैं, {name}! जारी रखें 💬",
-      'bot_high_risk_1': "नमस्ते {name}, मैं देख सकता हूं कि आपको लिखना थोड़ा मुश्किल लग रहा है — लेकिन चिंता मत करो, मैं आपके साथ हूं 🤝\n\nलेखन चुनौतीपूर्ण हो सकता है, लेकिन हर विशेषज्ञ एक शुरुआतकर्ता के रूप में शुरू हुआ! आइए हाथ की ताकत और अक्षर के आकार पर एक साथ काम करें — हम कदम दर कदम बेहतर होंगे 🎯",
-      'bot_high_risk_2': "हम इन पर ध्यान केंद्रित करेंगे:\n\n🖐️ हाथ मजबूत करने के व्यायाम (रोजाना एक नरम गेंद निचोड़ें)\n🔤 मोटे क्रेयॉन या पेंसिल से अक्षर ट्रेसिंग\n⏰ छोटे 10-मिनट के अभ्यास सत्र (कोई दबाव नहीं!)\n🎮 इसे मनोरंजक बनाने के लिए मजेदार लेखन खेल\n\nयाद रखें: प्रगति, पूर्णता नहीं! आप कर सकते हैं 💖",
-      'bot_summary': "📊 यहां आपका त्वरित सारांश है:\n\n• जोखिम स्तर: {risk}\n• IQ स्कोर: {iq}\n• फोकस क्षेत्र: {focus}",
-      'bot_closing': "यदि आपको मदद या प्रोत्साहन की आवश्यकता है तो मैं हमेशा यहां हूं! किसी भी समय चैट आइकन टैप करें 🤖💙\n\nअभ्यास के लिए तैयार हैं? चलो चलें! 🚀",
+      'bot_greeting':
+          "नमस्ते {name}! मैंने आपके लेखन का विश्लेषण किया है और कुछ बताना चाहता हूं 🤖✨",
+      'bot_low_risk_1':
+          "शानदार काम, {name}! आपका लेखन स्पष्ट और आत्मविश्वास से भरा दिख रहा है 💪\n\nआपकी हस्तलेखन में बेहतरीन नियंत्रण और स्थिरता है। आप बहुत अच्छा कर रहे हैं!",
+      'bot_low_risk_2':
+          "रोजाना एक पेज अभ्यास करते रहें — आप महानता की ओर बढ़ रहे हैं 🌟\n\nतेज रहने के लिए कुछ टिप्स:\n\n✏️ उस सुंदर स्पष्टता को बनाए रखने के लिए धीरे लिखने का प्रयास करें\n📚 कहानियां लिखने का अभ्यास करें — यह मजेदार है और मदद करता है!",
+      'bot_moderate_risk_1':
+          "मैंने आपके लेखन को ध्यान से देखा है, {name} 👀\n\nमुझे कुछ स्पेसिंग और संरेखण पैटर्न दिखे — लेकिन यह पूरी तरह से ठीक किया जा सकता है! ✏️ आप पहले से सुधार कर रहे हैं, और मैं आपके प्रयास देख सकता हूं 💪",
+      'bot_moderate_risk_2':
+          "यहां कुछ बहुत उपयोगी टिप्स हैं:\n\n📝 रोजाना डॉटेड शीट पर अक्षरों को ट्रेस करने का प्रयास करें\n✋ हाथ की ताकत बनाने के लिए उंगली व्यायाम करें\n📏 अक्षरों को समान रखने के लिए लाइन वाले कागज का उपयोग करें\n\nआप बहुत अच्छा कर रहे हैं, {name}! जारी रखें 💬",
+      'bot_high_risk_1':
+          "नमस्ते {name}, मैं देख सकता हूं कि आपको लिखना थोड़ा मुश्किल लग रहा है — लेकिन चिंता मत करो, मैं आपके साथ हूं 🤝\n\nलेखन चुनौतीपूर्ण हो सकता है, लेकिन हर विशेषज्ञ एक शुरुआतकर्ता के रूप में शुरू हुआ! आइए हाथ की ताकत और अक्षर के आकार पर एक साथ काम करें — हम कदम दर कदम बेहतर होंगे 🎯",
+      'bot_high_risk_2':
+          "हम इन पर ध्यान केंद्रित करेंगे:\n\n🖐️ हाथ मजबूत करने के व्यायाम (रोजाना एक नरम गेंद निचोड़ें)\n🔤 मोटे क्रेयॉन या पेंसिल से अक्षर ट्रेसिंग\n⏰ छोटे 10-मिनट के अभ्यास सत्र (कोई दबाव नहीं!)\n🎮 इसे मनोरंजक बनाने के लिए मजेदार लेखन खेल\n\nयाद रखें: प्रगति, पूर्णता नहीं! आप कर सकते हैं 💖",
+      'bot_summary':
+          "📊 यहां आपका त्वरित सारांश है:\n\n• जोखिम स्तर: {risk}\n• IQ स्कोर: {iq}\n• फोकस क्षेत्र: {focus}",
+      'bot_closing':
+          "यदि आपको मदद या प्रोत्साहन की आवश्यकता है तो मैं हमेशा यहां हूं! किसी भी समय चैट आइकन टैप करें 🤖💙\n\nअभ्यास के लिए तैयार हैं? चलो चलें! 🚀",
       'focus_low': 'स्थिरता बनाए रखें',
       'focus_moderate': 'स्पेसिंग और संरेखण',
       'focus_high': 'हाथ की ताकत और अक्षर निर्माण',
-      'bot_tips': "यहां एक प्रो टिप है: बेहतर नियंत्रण के लिए अपनी पेंसिल को नोक से लगभग 1 इंच की दूरी पर पकड़ें!",
+      'bot_tips':
+          "यहां एक प्रो टिप है: बेहतर नियंत्रण के लिए अपनी पेंसिल को नोक से लगभग 1 इंच की दूरी पर पकड़ें!",
       'bot_practice': "बढ़िया! अब आपका अभ्यास क्षेत्र खोल रहे हैं...",
       'bot_report': "आपकी विस्तृत रिपोर्ट लोड हो रही है...",
     },
@@ -338,7 +368,7 @@ class AppStrings {
       'about': 'ನಮ್ಮ ಬಗ್ಗೆ',
       'recent_activity': 'ಇತ್ತೀಚಿನ ಚಟುವಟಿಕೆ',
       'no_recent_activity': 'ಇತ್ತೀಚಿನ ಮೌಲ್ಯಮಾಪನಗಳಿಲ್ಲ',
-      
+
       // Profile Screen
       'profile_title': 'ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ರಚಿಸಿ',
       'profile_subtitle': 'ನಿಮ್ಮನ್ನು ಉತ್ತಮವಾಗಿ ತಿಳಿದುಕೊಳ್ಳೋಣ!',
@@ -360,7 +390,7 @@ class AppStrings {
       'school_required': 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಶಾಲೆಯ ಹೆಸರು ನಮೂದಿಸಿ',
       'contact_required': 'ದಯವಿಟ್ಟು ಪೋಷಕರ ಸಂಪರ್ಕ ನಮೂದಿಸಿ',
       'contact_invalid': 'ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ 10-ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ',
-      
+
       // IQ Test Screen
       'iq_test_title': 'ತ್ವರಿತ IQ ಮೌಲ್ಯಮಾಪನ',
       'iq_test_subtitle': 'ಈ ಮಜಾ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ! ಯಾವುದೇ ಒತ್ತಡವಿಲ್ಲ 😊',
@@ -369,10 +399,11 @@ class AppStrings {
       'next': 'ಮುಂದೆ',
       'finish': 'ಮುಗಿಸಿ',
       'select_answer': 'ದಯವಿಟ್ಟು ಉತ್ತರ ಆಯ್ಕೆಮಾಡಿ',
-      
+
       // Upload Screen
       'upload_title': 'ಕೈಬರಹ ಮಾದರಿ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
-      'upload_subtitle': 'ನಿಮ್ಮ ಬರವಣಿಗೆಯನ್ನು ನೀವು ಹೇಗೆ ಒದಗಿಸಲು ಬಯಸುತ್ತೀರಿ ಎಂಬುದನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+      'upload_subtitle':
+          'ನಿಮ್ಮ ಬರವಣಿಗೆಯನ್ನು ನೀವು ಹೇಗೆ ಒದಗಿಸಲು ಬಯಸುತ್ತೀರಿ ಎಂಬುದನ್ನು ಆಯ್ಕೆಮಾಡಿ',
       'camera': 'ಕ್ಯಾಮೆರಾ',
       'gallery': 'ಗ್ಯಾಲರಿ',
       'draw': 'ಡ್ರಾ ಮಾಡಿ',
@@ -381,7 +412,7 @@ class AppStrings {
       'draw_desc': 'ನೇರವಾಗಿ ಪರದೆಯ ಮೇಲೆ ಡ್ರಾ ಮಾಡಿ',
       'submit': 'ವಿಶ್ಲೇಷಣೆಗಾಗಿ ಸಲ್ಲಿಸಿ',
       'upload_image_first': 'ದಯವಿಟ್ಟು ಮೊದಲು ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
-      
+
       // Processing Screen
       'processing_title': 'ನಿಮ್ಮ ಕೈಬರಹವನ್ನು ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ',
       'processing_subtitle': 'ನಮ್ಮ AI ತನ್ನ ಮಾಯಾಜಾಲವನ್ನು ಕೆಲಸ ಮಾಡುತ್ತಿದೆ...',
@@ -390,7 +421,7 @@ class AppStrings {
       'checking_alignment': 'ಬೇಸ್‌ಲೈನ್ ಹೊಂದಾಣಿಕೆಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ',
       'detecting_pressure': 'ಒತ್ತಡ ವ್ಯತ್ಯಾಸಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲಾಗುತ್ತಿದೆ',
       'calculating_risk': 'ಅಪಾಯ ಮೌಲ್ಯಮಾಪನವನ್ನು ಲೆಕ್ಕಾಚಾರ ಮಾಡಲಾಗುತ್ತಿದೆ',
-      
+
       // Results Screen
       'results_title': 'ಮೌಲ್ಯಮಾಪನ ಫಲಿತಾಂಶಗಳು',
       'dysgraphia_risk': 'ಡಿಸ್ಗ್ರಾಫಿಯಾ ಅಪಾಯ',
@@ -402,13 +433,13 @@ class AppStrings {
       'view_detailed_report': 'ವಿವರವಾದ ವರದಿ ವೀಕ್ಷಿಸಿ',
       'talk_to_handybot': 'ಹ್ಯಾಂಡೀಬಾಟ್‌ನೊಂದಿಗೆ ಮಾತನಾಡಿ',
       'back_home': 'ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ',
-      
+
       // HandyBot Screen
       'handybot_title': 'ಹ್ಯಾಂಡೀಬಾಟ್ AI ಚಾಟ್',
       'type_message': 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡಿ...',
       'voice_enabled': 'ಧ್ವನಿ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ',
       'voice_disabled': 'ಧ್ವನಿ ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ',
-      
+
       // Practice Zone
       'practice_title': 'ಅಭ್ಯಾಸ ವಲಯ',
       'practice_subtitle': 'ನಿಮ್ಮ ಕೈಬರಹವನ್ನು ಸುಧಾರಿಸಲು ಮಜಾ ಚಟುವಟಿಕೆಗಳು',
@@ -420,17 +451,18 @@ class AppStrings {
       'accuracy': 'ನಿಖರತೆ',
       'day_streak': 'ದಿನದ ಸರಣಿ',
       'handybot_tip': 'ಹ್ಯಾಂಡೀಬಾಟ್‌ನ ದೈನಂದಿನ ಸಲಹೆ',
-      
+
       // History Screen
       'history_title': 'ಮೌಲ್ಯಮಾಪನ ಇತಿಹಾಸ',
       'no_assessments': 'ಇನ್ನೂ ಯಾವುದೇ ಮೌಲ್ಯಮಾಪನಗಳಿಲ್ಲ',
-      'start_first_test': 'ಫಲಿತಾಂಶಗಳನ್ನು ಇಲ್ಲಿ ನೋಡಲು ನಿಮ್ಮ ಮೊದಲ ಪರೀಕ್ಷೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ',
+      'start_first_test':
+          'ಫಲಿತಾಂಶಗಳನ್ನು ಇಲ್ಲಿ ನೋಡಲು ನಿಮ್ಮ ಮೊದಲ ಪರೀಕ್ಷೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ',
       'assessment_details': 'ಮೌಲ್ಯಮಾಪನ ವಿವರಗಳು',
       'date': 'ದಿನಾಂಕ',
       'time': 'ಸಮಯ',
       'risk_level': 'ಅಪಾಯ ಮಟ್ಟ',
       'recommendation': 'ಶಿಫಾರಸು',
-      
+
       // Settings Screen
       'settings_title': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
       'language_settings': 'ಭಾಷೆ',
@@ -439,50 +471,65 @@ class AppStrings {
       'large_font': 'ದೊಡ್ಡ ಫಾಂಟ್ ಮೋಡ್',
       'large_font_desc': 'ಉತ್ತಮ ಓದುವಿಕೆಗಾಗಿ ಪಠ್ಯ ಗಾತ್ರವನ್ನು ಹೆಚ್ಚಿಸಿ',
       'voice_assistant': 'ಧ್ವನಿ ಸಹಾಯಕ',
-      'voice_assistant_desc': 'ಅಪ್ಲಿಕೇಶನ್‌ನಾದ್ಯಂತ ಧ್ವನಿ ಮಾರ್ಗದರ್ಶನವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ',
+      'voice_assistant_desc':
+          'ಅಪ್ಲಿಕೇಶನ್‌ನಾದ್ಯಂತ ಧ್ವನಿ ಮಾರ್ಗದರ್ಶನವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ',
       'notifications_title': 'ಅಧಿಸೂಚನೆಗಳು',
       'notifications_desc': 'ಅಭ್ಯಾಸ ಜ್ಞಾಪನೆಗಳು ಮತ್ತು ಸಲಹೆಗಳನ್ನು ಸ್ವೀಕರಿಸಿ',
       'data_management': 'ಡೇಟಾ ನಿರ್ವಹಣೆ',
       'clear_data': 'ಎಲ್ಲಾ ಡೇಟಾ ತೆರವುಗೊಳಿಸಿ',
-      'clear_data_confirm': 'ನೀವು ಎಲ್ಲಾ ಡೇಟಾವನ್ನು ತೆರವುಗೊಳಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ? ಇದು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಮತ್ತು ಎಲ್ಲಾ ಮೌಲ್ಯಮಾಪನಗಳನ್ನು ತೆಗೆದುಹಾಕುತ್ತದೆ।',
+      'clear_data_confirm':
+          'ನೀವು ಎಲ್ಲಾ ಡೇಟಾವನ್ನು ತೆರವುಗೊಳಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ? ಇದು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಮತ್ತು ಎಲ್ಲಾ ಮೌಲ್ಯಮಾಪನಗಳನ್ನು ತೆಗೆದುಹಾಕುತ್ತದೆ।',
       'yes': 'ಹೌದು',
       'no': 'ಇಲ್ಲ',
       'all_data_cleared': 'ಎಲ್ಲಾ ಡೇಟಾ ಯಶಸ್ವಿಯಾಗಿ ತೆರವುಗೊಳಿಸಲಾಗಿದೆ',
       'start_fresh': 'ಹೊಸದಾಗಿ ಪ್ರಾರಂಭಿಸಿ',
       'language_changed': 'ಭಾಷೆಯನ್ನು ಬದಲಾಯಿಸಲಾಗಿದೆ',
-      
+
       // About Screen
       'about_title': 'En-HanZ ಕುರಿತು',
       'app_purpose': 'ಅಪ್ಲಿಕೇಶನ್ ಉದ್ದೇಶ',
-      'purpose_desc': 'En-HanZ ಕೈಬರಹ ವಿಶ್ಲೇಷಣೆಯ ಮೂಲಕ ಮಕ್ಕಳಲ್ಲಿ ಡಿಸ್ಗ್ರಾಫಿಯಾದ ಆರಂಭಿಕ ಚಿಹ್ನೆಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲು AI ಬಳಸುತ್ತದೆ, ವೈಯಕ್ತಿಕ ಶಿಫಾರಸುಗಳು ಮತ್ತು ಅಭ್ಯಾಸವನ್ನು ಒದಗಿಸುತ್ತದೆ।',
+      'purpose_desc':
+          'En-HanZ ಕೈಬರಹ ವಿಶ್ಲೇಷಣೆಯ ಮೂಲಕ ಮಕ್ಕಳಲ್ಲಿ ಡಿಸ್ಗ್ರಾಫಿಯಾದ ಆರಂಭಿಕ ಚಿಹ್ನೆಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲು AI ಬಳಸುತ್ತದೆ, ವೈಯಕ್ತಿಕ ಶಿಫಾರಸುಗಳು ಮತ್ತು ಅಭ್ಯಾಸವನ್ನು ಒದಗಿಸುತ್ತದೆ।',
       'hackathon_title': 'ಸ್ಮಾರ್ಟ್ ಇಂಡಿಯಾ ಹ್ಯಾಕಥಾನ್ 2025',
-      'hackathon_desc': 'ಶಾಲೆಗಳಲ್ಲಿ ಆರಂಭಿಕ ಡಿಸ್ಗ್ರಾಫಿಯಾ ಪತ್ತೆಯ ಸವಾಲನ್ನು ಪರಿಹರಿಸಲು SIH 2025 ರ ಭಾಗವಾಗಿ ಈ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಅಭಿವೃದ್ಧಿಪಡಿಸಲಾಗಿದೆ।',
+      'hackathon_desc':
+          'ಶಾಲೆಗಳಲ್ಲಿ ಆರಂಭಿಕ ಡಿಸ್ಗ್ರಾಫಿಯಾ ಪತ್ತೆಯ ಸವಾಲನ್ನು ಪರಿಹರಿಸಲು SIH 2025 ರ ಭಾಗವಾಗಿ ಈ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಅಭಿವೃದ್ಧಿಪಡಿಸಲಾಗಿದೆ।',
       'key_features': 'ಪ್ರಮುಖ ವೈಶಿಷ್ಟ್ಯಗಳು',
       'feature_1': 'AI-ಚಾಲಿತ ಕೈಬರಹ ವಿಶ್ಲೇಷಣೆ',
       'feature_2': 'ವೈಯಕ್ತಿಕ ಶಿಫಾರಸುಗಳು',
       'feature_3': 'ಸಂವಾದಾತ್ಮಕ ಅಭ್ಯಾಸ',
       'feature_4': 'ಪ್ರಗತಿ ಟ್ರ್ಯಾಕಿಂಗ್ ಮತ್ತು ಇತಿಹಾಸ',
       'privacy_title': 'ಗೋಪ್ಯತೆ ಸೂಚನೆ',
-      'privacy_desc': 'ನಿಮ್ಮ ಕೈಬರಹ ಮಾದರಿಗಳು ಮತ್ತು ವೈಯಕ್ತಿಕ ಡೇಟಾವನ್ನು ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಸುರಕ್ಷಿತವಾಗಿ ಸಂಗ್ರಹಿಸಲಾಗಿದೆ। ನಾವು ಯಾವುದೇ ಮಾಹಿತಿಯನ್ನು ಮೂರನೇ ವ್ಯಕ್ತಿಗಳೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳುವುದಿಲ್ಲ।',
+      'privacy_desc':
+          'ನಿಮ್ಮ ಕೈಬರಹ ಮಾದರಿಗಳು ಮತ್ತು ವೈಯಕ್ತಿಕ ಡೇಟಾವನ್ನು ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಸುರಕ್ಷಿತವಾಗಿ ಸಂಗ್ರಹಿಸಲಾಗಿದೆ। ನಾವು ಯಾವುದೇ ಮಾಹಿತಿಯನ್ನು ಮೂರನೇ ವ್ಯಕ್ತಿಗಳೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳುವುದಿಲ್ಲ।',
       'version': 'ಆವೃತ್ತಿ',
       'copyright': '© 2025 En-HanZ ತಂಡ। ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ।',
       'contact_us': 'ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ',
       'support': 'ಬೆಂಬಲ',
-      
+
       // HandyBot Messages
-      'bot_greeting': "ನಮಸ್ಕಾರ {name}! ನಾನು ನಿಮ್ಮ ಬರವಣಿಗೆಯನ್ನು ವಿಶ್ಲೇಷಿಸಿದ್ದೇನೆ ಮತ್ತು ಏನನ್ನಾದರೂ ಹಂಚಿಕೊಳ್ಳಲು ಬಯಸುತ್ತೇನೆ 🤖✨",
-      'bot_low_risk_1': "ಅದ್ಭುತ ಕೆಲಸ, {name}! ನಿಮ್ಮ ಬರವಣಿಗೆ ಸ್ಪಷ್ಟ ಮತ್ತು ಆತ್ಮವಿಶ್ವಾಸದಿಂದ ಕೂಡಿದೆ 💪\n\nನಿಮ್ಮ ಕೈಬರಹ ಉತ್ತಮ ನಿಯಂತ್ರಣ ಮತ್ತು ಸ್ಥಿರತೆಯನ್ನು ತೋರಿಸುತ್ತದೆ। ನೀವು ತುಂಬಾ ಚೆನ್ನಾಗಿ ಮಾಡುತ್ತಿದ್ದೀರಿ!",
-      'bot_low_risk_2': "ದಿನಕ್ಕೆ ಒಂದು ಪುಟ ಅಭ್ಯಾಸ ಮುಂದುವರಿಸಿ — ನೀವು ಶ್ರೇಷ್ಠತೆಯ ಹಾದಿಯಲ್ಲಿದ್ದೀರಿ 🌟\n\nತೀಕ್ಷ್ಣವಾಗಿರಲು ಕೆಲವು ಸಲಹೆಗಳು:\n\n✏️ ಆ ಸುಂದರ ಸ್ಪಷ್ಟತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಲು ನಿಧಾನವಾಗಿ ಬರೆಯಲು ಪ್ರಯತ್ನಿಸಿ\n📚 ಕಥೆಗಳನ್ನು ಬರೆಯುವ ಅಭ್ಯಾಸ — ಇದು ಮೋಜಿನ ಮತ್ತು ಸಹಾಯಕವಾಗಿದೆ!",
-      'bot_moderate_risk_1': "ನಾನು ನಿಮ್ಮ ಬರವಣಿಗೆಯನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ನೋಡಿದ್ದೇನೆ, {name} 👀\n\nನಾನು ಕೆಲವು ಅಂತರ ಮತ್ತು ಹೊಂದಾಣಿಕೆ ಮಾದರಿಗಳನ್ನು ಗಮನಿಸಿದ್ದೇನೆ — ಆದರೆ ಅದನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಸರಿಪಡಿಸಬಹುದು! ✏️ ನೀವು ಈಗಾಗಲೇ ಸುಧಾರಿಸುತ್ತಿದ್ದೀರಿ, ಮತ್ತು ನಾನು ನಿಮ್ಮ ಪ್ರಯತ್ನವನ್ನು ನೋಡಬಹುದು 💪",
-      'bot_moderate_risk_2': "ಇಲ್ಲಿ ಕೆಲವು ಸೂಪರ್ ಸಹಾಯಕ ಸಲಹೆಗಳಿವೆ:\n\n📝 ದಿನನಿತ್ಯ ಡಾಟೆಡ್ ಶೀಟ್‌ಗಳಲ್ಲಿ ಅಕ್ಷರಗಳನ್ನು ಟ್ರೇಸ್ ಮಾಡಲು ಪ್ರಯತ್ನಿಸಿ\n✋ ಕೈ ಶಕ್ತಿಯನ್ನು ನಿರ್ಮಿಸಲು ಬೆರಳು ವ್ಯಾಯಾಮಗಳನ್ನು ಮಾಡಿ\n📏 ನಿಮ್ಮ ಅಕ್ಷರಗಳನ್ನು ಸಮವಾಗಿ ಇಡಲು ಲೈನ್ಡ್ ಪೇಪರ್ ಬಳಸಿ\n\nನೀವು ತುಂಬಾ ಚೆನ್ನಾಗಿ ಮಾಡುತ್ತಿದ್ದೀರಿ, {name}! ಮುಂದುವರಿಸಿ 💬",
-      'bot_high_risk_1': "ಹಲೋ {name}, ನಿಮಗೆ ಬರೆಯುವುದು ಸ್ವಲ್ಪ ಕಷ್ಟವಾಗುತ್ತಿದೆ ಎಂದು ನಾನು ನೋಡುತ್ತೇನೆ — ಆದರೆ ಚಿಂತಿಸಬೇಡಿ, ನಾನು ನಿಮ್ಮೊಂದಿಗಿದ್ದೇನೆ 🤝\n\nಬರವಣಿಗೆ ಸವಾಲಿನದಾಗಬಹುದು, ಆದರೆ ಪ್ರತಿಯೊಬ್ಬ ತಜ್ಞರು ಆರಂಭಿಕರಾಗಿ ಪ್ರಾರಂಭಿಸಿದರು! ಕೈ ಶಕ್ತಿ ಮತ್ತು ಅಕ್ಷರ ಆಕಾರಗಳ ಮೇಲೆ ಒಟ್ಟಿಗೆ ಕೆಲಸ ಮಾಡೋಣ — ನಾವು ಹಂತ ಹಂತವಾಗಿ ಉತ್ತಮರಾಗುತ್ತೇವೆ 🎯",
-      'bot_high_risk_2': "ನಾವು ಇವುಗಳ ಮೇಲೆ ಕೇಂದ್ರೀಕರಿಸುತ್ತೇವೆ:\n\n🖐️ ಕೈ ಬಲಪಡಿಸುವ ವ್ಯಾಯಾಮಗಳು (ದಿನನಿತ್ಯ ಮೃದುವಾದ ಚೆಂಡನ್ನು ಹಿಸುಕಿ)\n🔤 ದಪ್ಪ ಕ್ರೇಯಾನ್‌ಗಳು ಅಥವಾ ಪೆನ್ಸಿಲ್‌ಗಳೊಂದಿಗೆ ಅಕ್ಷರ ಟ್ರೇಸಿಂಗ್\n⏰ ಸಣ್ಣ 10-ನಿಮಿಷ ಅಭ್ಯಾಸ ಅವಧಿಗಳು (ಯಾವುದೇ ಒತ್ತಡವಿಲ್ಲ!)\n🎮 ಇದನ್ನು ಆನಂದದಾಯಕವಾಗಿಸಲು ಮೋಜಿನ ಬರವಣಿಗೆ ಆಟಗಳು\n\nನೆನಪಿಡಿ: ಪ್ರಗತಿ, ಪರಿಪೂರ್ಣತೆ ಅಲ್ಲ! ನೀವು ಮಾಡಬಹುದು 💖",
-      'bot_summary': "📊 ಇಲ್ಲಿ ನಿಮ್ಮ ತ್ವರಿತ ಸಾರಾಂಶವಿದೆ:\n\n• ಅಪಾಯ ಮಟ್ಟ: {risk}\n• IQ ಸ್ಕೋರ್: {iq}\n• ಕೇಂದ್ರ ಪ್ರದೇಶ: {focus}",
-      'bot_closing': "ನಿಮಗೆ ಸಹಾಯ ಅಥವಾ ಪ್ರೋತ್ಸಾಹದ ಅಗತ್ಯವಿದ್ದರೆ ನಾನು ಯಾವಾಗಲೂ ಇಲ್ಲಿದ್ದೇನೆ! ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಚಾಟ್ ಐಕಾನ್ ಟ್ಯಾಪ್ ಮಾಡಿ 🤖💙\n\nಅಭ್ಯಾಸಕ್ಕೆ ಸಿದ್ಧರಿದ್ದೀರಾ? ಹೋಗೋಣ! 🚀",
+      'bot_greeting':
+          "ನಮಸ್ಕಾರ {name}! ನಾನು ನಿಮ್ಮ ಬರವಣಿಗೆಯನ್ನು ವಿಶ್ಲೇಷಿಸಿದ್ದೇನೆ ಮತ್ತು ಏನನ್ನಾದರೂ ಹಂಚಿಕೊಳ್ಳಲು ಬಯಸುತ್ತೇನೆ 🤖✨",
+      'bot_low_risk_1':
+          "ಅದ್ಭುತ ಕೆಲಸ, {name}! ನಿಮ್ಮ ಬರವಣಿಗೆ ಸ್ಪಷ್ಟ ಮತ್ತು ಆತ್ಮವಿಶ್ವಾಸದಿಂದ ಕೂಡಿದೆ 💪\n\nನಿಮ್ಮ ಕೈಬರಹ ಉತ್ತಮ ನಿಯಂತ್ರಣ ಮತ್ತು ಸ್ಥಿರತೆಯನ್ನು ತೋರಿಸುತ್ತದೆ। ನೀವು ತುಂಬಾ ಚೆನ್ನಾಗಿ ಮಾಡುತ್ತಿದ್ದೀರಿ!",
+      'bot_low_risk_2':
+          "ದಿನಕ್ಕೆ ಒಂದು ಪುಟ ಅಭ್ಯಾಸ ಮುಂದುವರಿಸಿ — ನೀವು ಶ್ರೇಷ್ಠತೆಯ ಹಾದಿಯಲ್ಲಿದ್ದೀರಿ 🌟\n\nತೀಕ್ಷ್ಣವಾಗಿರಲು ಕೆಲವು ಸಲಹೆಗಳು:\n\n✏️ ಆ ಸುಂದರ ಸ್ಪಷ್ಟತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಲು ನಿಧಾನವಾಗಿ ಬರೆಯಲು ಪ್ರಯತ್ನಿಸಿ\n📚 ಕಥೆಗಳನ್ನು ಬರೆಯುವ ಅಭ್ಯಾಸ — ಇದು ಮೋಜಿನ ಮತ್ತು ಸಹಾಯಕವಾಗಿದೆ!",
+      'bot_moderate_risk_1':
+          "ನಾನು ನಿಮ್ಮ ಬರವಣಿಗೆಯನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ನೋಡಿದ್ದೇನೆ, {name} 👀\n\nನಾನು ಕೆಲವು ಅಂತರ ಮತ್ತು ಹೊಂದಾಣಿಕೆ ಮಾದರಿಗಳನ್ನು ಗಮನಿಸಿದ್ದೇನೆ — ಆದರೆ ಅದನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಸರಿಪಡಿಸಬಹುದು! ✏️ ನೀವು ಈಗಾಗಲೇ ಸುಧಾರಿಸುತ್ತಿದ್ದೀರಿ, ಮತ್ತು ನಾನು ನಿಮ್ಮ ಪ್ರಯತ್ನವನ್ನು ನೋಡಬಹುದು 💪",
+      'bot_moderate_risk_2':
+          "ಇಲ್ಲಿ ಕೆಲವು ಸೂಪರ್ ಸಹಾಯಕ ಸಲಹೆಗಳಿವೆ:\n\n📝 ದಿನನಿತ್ಯ ಡಾಟೆಡ್ ಶೀಟ್‌ಗಳಲ್ಲಿ ಅಕ್ಷರಗಳನ್ನು ಟ್ರೇಸ್ ಮಾಡಲು ಪ್ರಯತ್ನಿಸಿ\n✋ ಕೈ ಶಕ್ತಿಯನ್ನು ನಿರ್ಮಿಸಲು ಬೆರಳು ವ್ಯಾಯಾಮಗಳನ್ನು ಮಾಡಿ\n📏 ನಿಮ್ಮ ಅಕ್ಷರಗಳನ್ನು ಸಮವಾಗಿ ಇಡಲು ಲೈನ್ಡ್ ಪೇಪರ್ ಬಳಸಿ\n\nನೀವು ತುಂಬಾ ಚೆನ್ನಾಗಿ ಮಾಡುತ್ತಿದ್ದೀರಿ, {name}! ಮುಂದುವರಿಸಿ 💬",
+      'bot_high_risk_1':
+          "ಹಲೋ {name}, ನಿಮಗೆ ಬರೆಯುವುದು ಸ್ವಲ್ಪ ಕಷ್ಟವಾಗುತ್ತಿದೆ ಎಂದು ನಾನು ನೋಡುತ್ತೇನೆ — ಆದರೆ ಚಿಂತಿಸಬೇಡಿ, ನಾನು ನಿಮ್ಮೊಂದಿಗಿದ್ದೇನೆ 🤝\n\nಬರವಣಿಗೆ ಸವಾಲಿನದಾಗಬಹುದು, ಆದರೆ ಪ್ರತಿಯೊಬ್ಬ ತಜ್ಞರು ಆರಂಭಿಕರಾಗಿ ಪ್ರಾರಂಭಿಸಿದರು! ಕೈ ಶಕ್ತಿ ಮತ್ತು ಅಕ್ಷರ ಆಕಾರಗಳ ಮೇಲೆ ಒಟ್ಟಿಗೆ ಕೆಲಸ ಮಾಡೋಣ — ನಾವು ಹಂತ ಹಂತವಾಗಿ ಉತ್ತಮರಾಗುತ್ತೇವೆ 🎯",
+      'bot_high_risk_2':
+          "ನಾವು ಇವುಗಳ ಮೇಲೆ ಕೇಂದ್ರೀಕರಿಸುತ್ತೇವೆ:\n\n🖐️ ಕೈ ಬಲಪಡಿಸುವ ವ್ಯಾಯಾಮಗಳು (ದಿನನಿತ್ಯ ಮೃದುವಾದ ಚೆಂಡನ್ನು ಹಿಸುಕಿ)\n🔤 ದಪ್ಪ ಕ್ರೇಯಾನ್‌ಗಳು ಅಥವಾ ಪೆನ್ಸಿಲ್‌ಗಳೊಂದಿಗೆ ಅಕ್ಷರ ಟ್ರೇಸಿಂಗ್\n⏰ ಸಣ್ಣ 10-ನಿಮಿಷ ಅಭ್ಯಾಸ ಅವಧಿಗಳು (ಯಾವುದೇ ಒತ್ತಡವಿಲ್ಲ!)\n🎮 ಇದನ್ನು ಆನಂದದಾಯಕವಾಗಿಸಲು ಮೋಜಿನ ಬರವಣಿಗೆ ಆಟಗಳು\n\nನೆನಪಿಡಿ: ಪ್ರಗತಿ, ಪರಿಪೂರ್ಣತೆ ಅಲ್ಲ! ನೀವು ಮಾಡಬಹುದು 💖",
+      'bot_summary':
+          "📊 ಇಲ್ಲಿ ನಿಮ್ಮ ತ್ವರಿತ ಸಾರಾಂಶವಿದೆ:\n\n• ಅಪಾಯ ಮಟ್ಟ: {risk}\n• IQ ಸ್ಕೋರ್: {iq}\n• ಕೇಂದ್ರ ಪ್ರದೇಶ: {focus}",
+      'bot_closing':
+          "ನಿಮಗೆ ಸಹಾಯ ಅಥವಾ ಪ್ರೋತ್ಸಾಹದ ಅಗತ್ಯವಿದ್ದರೆ ನಾನು ಯಾವಾಗಲೂ ಇಲ್ಲಿದ್ದೇನೆ! ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಚಾಟ್ ಐಕಾನ್ ಟ್ಯಾಪ್ ಮಾಡಿ 🤖💙\n\nಅಭ್ಯಾಸಕ್ಕೆ ಸಿದ್ಧರಿದ್ದೀರಾ? ಹೋಗೋಣ! 🚀",
       'focus_low': 'ಸ್ಥಿರತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ',
       'focus_moderate': 'ಅಂತರ ಮತ್ತು ಹೊಂದಾಣಿಕೆ',
       'focus_high': 'ಕೈ ಶಕ್ತಿ ಮತ್ತು ಅಕ್ಷರ ರಚನೆ',
-      'bot_tips': "ಇಲ್ಲಿ ಒಂದು ಪ್ರೊ ಟಿಪ್ ಇದೆ: ಉತ್ತಮ ನಿಯಂತ್ರಣಕ್ಕಾಗಿ ನಿಮ್ಮ ಪೆನ್ಸಿಲ್ ಅನ್ನು ತುದಿಯಿಂದ ಸುಮಾರು 1 ಇಂಚು ದೂರದಲ್ಲಿ ಹಿಡಿಯಿರಿ!",
+      'bot_tips':
+          "ಇಲ್ಲಿ ಒಂದು ಪ್ರೊ ಟಿಪ್ ಇದೆ: ಉತ್ತಮ ನಿಯಂತ್ರಣಕ್ಕಾಗಿ ನಿಮ್ಮ ಪೆನ್ಸಿಲ್ ಅನ್ನು ತುದಿಯಿಂದ ಸುಮಾರು 1 ಇಂಚು ದೂರದಲ್ಲಿ ಹಿಡಿಯಿರಿ!",
       'bot_practice': "ಅದ್ಭುತ! ಈಗ ನಿಮ್ಮ ಅಭ್ಯಾಸ ವಲಯವನ್ನು ತೆರೆಯುತ್ತಿದ್ದೇವೆ...",
       'bot_report': "ನಿಮ್ಮ ವಿವರವಾದ ವರದಿಯನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
     },

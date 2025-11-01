@@ -14,12 +14,19 @@ class HandyBot extends StatelessWidget {
         CircleAvatar(
           radius: size / 2,
           backgroundColor: Colors.deepPurple.shade100,
-          child: Icon(Icons.android, size: size * 0.5, color: Colors.deepPurple),
+          child: Icon(
+            Icons.android,
+            size: size * 0.5,
+            color: Colors.deepPurple,
+          ),
         ),
         if (waving)
           const Padding(
             padding: EdgeInsets.only(top: 8.0),
-            child: Text('Handy the Robot', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(
+              'Handy the Robot',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
       ],
     );

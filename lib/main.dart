@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Show loading screen
   runApp(const _LoadingApp());
-  
+
+  // Initialize Firebase
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint('✅ Firebase initialized successfully');
+  } catch (e) {
+    debugPrint('⚠️ Firebase initialization error: $e');
+  }
+
   // Preload Google Fonts to prevent errors
   try {
     await Future.wait([
@@ -21,10 +33,10 @@ void main() async {
     // If fonts fail to load, continue anyway
     debugPrint('Font loading error: $e');
   }
-  
+
   // Small delay to ensure fonts are ready
   await Future.delayed(const Duration(milliseconds: 100));
-  
+
   runApp(const MyApp());
 }
 

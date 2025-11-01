@@ -1,0 +1,61 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users collection - users can only read/write their own profile
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+    
+    // IQ Results collection - users can only access their own results
+    match /iq_results/{resultId} {
+      allow read: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.user_id == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+    }
+    
+    // Handwriting Analysis collection - users can only access their own analyses
+    match /handwriting_analysis/{analysisId} {
+      allow read: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.user_id == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+    }
+    
+    // Reports collection - users can only access their own reports
+    match /reports/{reportId} {
+      allow read: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.user_id == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+    }
+    
+    // Chat logs collection (optional for HandyBot) - users can only access their own chats
+    match /chat_logs/{chatId} {
+      allow read: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.user_id == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+    }
+    
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -22,9 +22,10 @@ class _PracticeZoneScreenState extends State<PracticeZoneScreen>
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOut),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 3),
     );
@@ -215,7 +216,9 @@ class _PracticeZoneScreenState extends State<PracticeZoneScreen>
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                  color: Color(0xFF1565C0).withValues(alpha: 0.2),
+                                  color: Color(
+                                    0xFF1565C0,
+                                  ).withValues(alpha: 0.2),
                                   width: 2,
                                 ),
                                 boxShadow: [
@@ -239,7 +242,10 @@ class _PracticeZoneScreenState extends State<PracticeZoneScreen>
                                       ),
                                       shape: BoxShape.circle,
                                     ),
-                                    child: Text('🤖', style: TextStyle(fontSize: 24)),
+                                    child: Text(
+                                      '🤖',
+                                      style: TextStyle(fontSize: 24),
+                                    ),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
@@ -326,10 +332,7 @@ class _PracticeZoneScreenState extends State<PracticeZoneScreen>
               shape: BoxShape.circle,
             ),
             child: IconButton(
-              icon: Icon(
-                Icons.arrow_back_rounded,
-                color: Color(0xFF1565C0),
-              ),
+              icon: Icon(Icons.arrow_back_rounded, color: Color(0xFF1565C0)),
               onPressed: () => Navigator.pop(context),
             ),
           ),

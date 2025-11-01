@@ -14,11 +14,11 @@ class ModernTheme {
   static const Color dangerRedDark = Color(0xFFDC2626);
   static const Color infoCyan = Color(0xFF06B6D4);
   static const Color infoCyanDark = Color(0xFF0891B2);
-  
+
   // Premium Orange
   static const Color premiumOrange = Color(0xFFFF6B35);
   static const Color premiumOrangeDark = Color(0xFFF7931E);
-  
+
   // Neutrals
   static const Color backgroundLight = Color(0xFFF8FAFC);
   static const Color cardWhite = Color(0xFFFFFFFF);
@@ -27,63 +27,63 @@ class ModernTheme {
   static const Color textLight = Color(0xFF94A3B8);
   static const Color borderLight = Color(0xFFE2E8F0);
   static const Color hoverLight = Color(0xFFF1F5F9);
-  
+
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [Color(0xFF3B82F6), Color(0xFF2563EB)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const LinearGradient premiumGradient = LinearGradient(
     colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const LinearGradient successGradient = LinearGradient(
     colors: [Color(0xFF34D399), Color(0xFF10B981)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const LinearGradient practiceGradient = LinearGradient(
     colors: [Color(0xFFF59E0B), Color(0xFFF97316)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const LinearGradient resultsGradient = LinearGradient(
     colors: [Color(0xFF06B6D4), Color(0xFF0891B2)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const LinearGradient dangerGradient = LinearGradient(
     colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   // Background Gradients (Subtle)
   static const LinearGradient backgroundGradient = LinearGradient(
     colors: [Color(0xFFF8FAFC), Color(0xFFF1F5F9)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const LinearGradient blueBackgroundGradient = LinearGradient(
     colors: [Color(0xFFEFF6FF), Color(0xFFDBEAFE)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const LinearGradient purpleBackgroundGradient = LinearGradient(
     colors: [Color(0xFFFAF5FF), Color(0xFFF3E8FF)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   // Enhanced Shadows (Elevation System)
   static List<BoxShadow> elevation1() {
     return [
@@ -94,7 +94,7 @@ class ModernTheme {
       ),
     ];
   }
-  
+
   static List<BoxShadow> elevation2() {
     return [
       BoxShadow(
@@ -109,7 +109,7 @@ class ModernTheme {
       ),
     ];
   }
-  
+
   static List<BoxShadow> elevation3() {
     return [
       BoxShadow(
@@ -124,7 +124,7 @@ class ModernTheme {
       ),
     ];
   }
-  
+
   static List<BoxShadow> elevation4() {
     return [
       BoxShadow(
@@ -139,7 +139,7 @@ class ModernTheme {
       ),
     ];
   }
-  
+
   // Colored Shadows
   static List<BoxShadow> coloredShadow(Color color, {double opacity = 0.3}) {
     return [
@@ -157,7 +157,7 @@ class ModernTheme {
       ),
     ];
   }
-  
+
   // Card Decorations
   static BoxDecoration modernCard({
     Color? backgroundColor,
@@ -171,7 +171,7 @@ class ModernTheme {
       boxShadow: shadows ?? elevation2(),
     );
   }
-  
+
   static BoxDecoration gradientCard({
     required Gradient gradient,
     List<BoxShadow>? shadows,
@@ -182,19 +182,13 @@ class ModernTheme {
       boxShadow: shadows ?? elevation3(),
     );
   }
-  
+
   // Glass Morphism Effect
-  static BoxDecoration glassMorphism({
-    Color? color,
-    double blur = 10,
-  }) {
+  static BoxDecoration glassMorphism({Color? color, double blur = 10}) {
     return BoxDecoration(
       color: (color ?? Colors.white).withOpacity(0.7),
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(
-        color: Colors.white.withOpacity(0.2),
-        width: 1.5,
-      ),
+      border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
       boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.05),
@@ -204,60 +198,58 @@ class ModernTheme {
       ],
     );
   }
-  
+
   // Button Styles
   static ButtonStyle primaryButton() {
     return ElevatedButton.styleFrom(
       backgroundColor: primaryBlue,
       foregroundColor: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 0,
       shadowColor: Colors.transparent,
     );
   }
-  
+
   static ButtonStyle gradientButton({Color? shadowColor}) {
     return ElevatedButton.styleFrom(
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.white,
       shadowColor: Colors.transparent,
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 0,
     );
   }
-  
+
   // Shimmer Loading Effect Colors
   static const Color shimmerBase = Color(0xFFE2E8F0);
   static const Color shimmerHighlight = Color(0xFFF8FAFC);
-  
+
   // Risk Level Colors (Enhanced)
   static Color getRiskColor(double risk) {
     if (risk < 0.4) return successGreen;
     if (risk < 0.7) return accentAmber;
     return dangerRed;
   }
-  
+
   static LinearGradient getRiskGradient(double risk) {
     if (risk < 0.4) return successGradient;
     if (risk < 0.7) return practiceGradient;
     return dangerGradient;
   }
-  
+
   // Icon Background
   static BoxDecoration iconBackground(Color color, {bool gradient = false}) {
     return BoxDecoration(
       color: gradient ? null : color.withOpacity(0.1),
-      gradient: gradient ? LinearGradient(
-        colors: [color, color.withOpacity(0.8)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ) : null,
+      gradient: gradient
+          ? LinearGradient(
+              colors: [color, color.withOpacity(0.8)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )
+          : null,
       borderRadius: BorderRadius.circular(12),
     );
   }

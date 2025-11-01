@@ -11,19 +11,29 @@ class CopyWordGame extends StatefulWidget {
 
 class _CopyWordGameState extends State<CopyWordGame> {
   final GlobalKey _canvasKey = GlobalKey();
-  final List<String> _words = ['APPLE', 'DOG', 'SUN', 'BOOK', 'BALL', 'CAT', 'TREE', 'STAR'];
+  final List<String> _words = [
+    'APPLE',
+    'DOG',
+    'SUN',
+    'BOOK',
+    'BALL',
+    'CAT',
+    'TREE',
+    'STAR',
+  ];
   int _currentWordIndex = 0;
-  List<Offset?> _drawnPoints = [];
+  final List<Offset?> _drawnPoints = [];
   int? _score;
   bool _showFeedback = false;
-  List<int> _scores = [];
+  final List<int> _scores = [];
   String _feedbackMessage = '';
 
   String get _currentWord => _words[_currentWordIndex];
 
   void _onPanStart(DragStartDetails details) {
     setState(() {
-      RenderBox? renderBox = _canvasKey.currentContext?.findRenderObject() as RenderBox?;
+      RenderBox? renderBox =
+          _canvasKey.currentContext?.findRenderObject() as RenderBox?;
       if (renderBox != null) {
         _drawnPoints.add(renderBox.globalToLocal(details.globalPosition));
       }
@@ -32,7 +42,8 @@ class _CopyWordGameState extends State<CopyWordGame> {
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
-      RenderBox? renderBox = _canvasKey.currentContext?.findRenderObject() as RenderBox?;
+      RenderBox? renderBox =
+          _canvasKey.currentContext?.findRenderObject() as RenderBox?;
       if (renderBox != null) {
         _drawnPoints.add(renderBox.globalToLocal(details.globalPosition));
       }
@@ -125,8 +136,10 @@ class _CopyWordGameState extends State<CopyWordGame> {
   }
 
   void _showResults() {
-    double avgScore = _scores.isEmpty ? 0 : _scores.reduce((a, b) => a + b) / _scores.length;
-    
+    double avgScore = _scores.isEmpty
+        ? 0
+        : _scores.reduce((a, b) => a + b) / _scores.length;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -161,8 +174,8 @@ class _CopyWordGameState extends State<CopyWordGame> {
                 color: avgScore > 80
                     ? Colors.green
                     : avgScore > 60
-                        ? Colors.orange
-                        : Colors.red,
+                    ? Colors.orange
+                    : Colors.red,
               ),
             ),
             const SizedBox(height: 16),
@@ -178,8 +191,8 @@ class _CopyWordGameState extends State<CopyWordGame> {
                     avgScore > 85
                         ? "Excellent handwriting! 🏆"
                         : avgScore > 70
-                            ? "Good neatness! Keep it up! 📈"
-                            : "Practice makes perfect! 💪",
+                        ? "Good neatness! Keep it up! 📈"
+                        : "Practice makes perfect! 💪",
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -252,7 +265,10 @@ class _CopyWordGameState extends State<CopyWordGame> {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back_rounded, color: Color(0xFFC2185B)),
+                      icon: Icon(
+                        Icons.arrow_back_rounded,
+                        color: Color(0xFFC2185B),
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                     Expanded(
@@ -396,8 +412,8 @@ class _CopyWordGameState extends State<CopyWordGame> {
                                     color: _score! > 75
                                         ? Colors.green
                                         : _score! > 50
-                                            ? Colors.orange
-                                            : Colors.red,
+                                        ? Colors.orange
+                                        : Colors.red,
                                     borderRadius: BorderRadius.circular(16),
                                     boxShadow: [
                                       BoxShadow(
@@ -508,7 +524,9 @@ class _CopyWordGameState extends State<CopyWordGame> {
                           ),
                         ),
                         child: Text(
-                          _currentWordIndex < _words.length - 1 ? 'Next' : 'Finish',
+                          _currentWordIndex < _words.length - 1
+                              ? 'Next'
+                              : 'Finish',
                         ),
                       ),
                     ),
@@ -559,18 +577,14 @@ class RuledLinesPainter extends CustomPainter {
     double lineSpacing = size.height / 8;
     for (int i = 1; i < 8; i++) {
       double y = i * lineSpacing;
-      canvas.drawLine(
-        Offset(20, y),
-        Offset(size.width - 20, y),
-        paint,
-      );
+      canvas.drawLine(Offset(20, y), Offset(size.width - 20, y), paint);
     }
 
     // Draw dotted middle line for letter height guide
     final dottedPaint = Paint()
       ..color = Colors.blue[200]!
       ..strokeWidth = 1;
-    
+
     for (int i = 0; i < 7; i++) {
       double y = (i + 0.5) * lineSpacing;
       for (double x = 20; x < size.width - 20; x += 10) {

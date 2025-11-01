@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import '../models/profile.dart';
 import '../models/app_settings.dart';
+import '../models/child_profile_model.dart';
 import '../services/storage_service.dart';
 
 class AppState extends ChangeNotifier {
@@ -14,6 +15,9 @@ class AppState extends ChangeNotifier {
   bool onboardingComplete = false;
   String? handwritingImagePath;
   AppSettings settings = AppSettings();
+
+  // Currently selected child profile for assessment
+  ChildProfileModel? selectedChildProfile;
 
   AppState() {
     _init();
@@ -27,7 +31,7 @@ class AppState extends ChangeNotifier {
         profile = Profile.fromJson(jsonDecode(json));
       } catch (_) {}
     }
-    
+
     // Load settings
     final settingsJson = await StorageService.loadSettingsJson();
     if (settingsJson != null) {
@@ -35,7 +39,7 @@ class AppState extends ChangeNotifier {
         settings = AppSettings.fromJson(jsonDecode(settingsJson));
       } catch (_) {}
     }
-    
+
     notifyListeners();
   }
 
@@ -74,8 +78,28 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Set the currently selected child profile
+  void selectChildProfile(ChildProfileModel? childProfile) {
+    selectedChildProfile = childProfile;
+    // Convert child profile to legacy Profile for compatibility
+    if (childProfile != null) {
+      profile = Profile(
+        name: childProfile.childName,
+        age: childProfile.age,
+        schoolClass: childProfile.schoolClass,
+        gender: childProfile.gender,
+        disabilities: childProfile.disabilities,
+        handedness: childProfile.handedness,
+      );
+    } else {
+      profile = null;
+    }
+    notifyListeners();
+  }
+
   Future<void> clearAllData() async {
     profile = null;
+    selectedChildProfile = null;
     iqScore = 0;
     mentalAge = 0;
     risk = 0.0;
