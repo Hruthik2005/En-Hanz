@@ -13,6 +13,7 @@ import 'screens/coach_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/handybot_chat_screen.dart';
+import 'screens/handibot_chat_screen.dart';
 import 'screens/practice_zone_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/settings_screen.dart';
@@ -87,6 +88,7 @@ class App extends StatelessWidget {
           '/coach': (_) => const CoachScreen(),
           '/home': (_) => const HomeScreen(),
           '/handybot': (_) => const HandyBotChatScreen(),
+          '/handibot-voice': (_) => const HandibotChatScreen(),
           '/practice': (_) => const PracticeZoneScreen(),
           '/practice/tracing': (_) => const LetterTracingGame(),
           '/practice/dots': (_) => const DotJoinGame(),

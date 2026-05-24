@@ -26,12 +26,12 @@ class ProcessingScreen extends StatefulWidget {
 class _ProcessingScreenState extends State<ProcessingScreen>
     with TickerProviderStateMixin {
   double _progress = 0.0;
-  Timer? _timer;
   String _currentTask = 'Initializing analysis...';
   int _currentQuoteIndex = 0;
   late AnimationController _pulseController;
   late AnimationController _rotateController;
   late AnimationController _typingController;
+  late AnimationController _progressController;
 
   final List<String> _tasks = [
     'Analyzing letter formation...',
@@ -71,8 +71,36 @@ class _ProcessingScreenState extends State<ProcessingScreen>
       vsync: this,
     )..repeat();
 
+    _progressController = AnimationController(
+      duration: const Duration(milliseconds: 2600),
+      vsync: this,
+    )..addListener(() {
+        if (!mounted) return;
+        final progress = _progressController.value.clamp(0.0, 1.0);
+        setState(() {
+          _progress = progress;
+          _currentTask = _taskForProgress(progress);
+        });
+      });
+
     _start();
     _startQuoteRotation();
+  }
+
+  String _taskForProgress(double progress) {
+    if (progress < 0.2) {
+      return 'Submitting image for analysis...';
+    }
+    if (progress < 0.45) {
+      return 'Uploading handwriting sample...';
+    }
+    if (progress < 0.7) {
+      return 'Analyzing handwriting patterns...';
+    }
+    if (progress < 0.9) {
+      return 'Saving results and generating report...';
+    }
+    return 'Finalizing analysis...';
   }
 
   void _startQuoteRotation() {
@@ -88,18 +116,7 @@ class _ProcessingScreenState extends State<ProcessingScreen>
   }
 
   void _start() async {
-    int taskIndex = 0;
-
-    // fake progress with task updates
-    _timer = Timer.periodic(const Duration(milliseconds: 600), (t) {
-      setState(() {
-        _progress = (_progress + 0.08).clamp(0.0, 0.98);
-        if (_progress > taskIndex * 0.14 && taskIndex < _tasks.length) {
-          _currentTask = _tasks[taskIndex];
-          taskIndex++;
-        }
-      });
-    });
+    _progressController.forward(from: 0.0);
 
     final appState = Provider.of<AppState>(context, listen: false);
     final profile = appState.profile ?? (throw Exception('Missing profile'));
@@ -144,7 +161,12 @@ class _ProcessingScreenState extends State<ProcessingScreen>
       );
     }
 
-    _timer?.cancel();
+    await _progressController.animateTo(
+      1.0,
+      duration: const Duration(milliseconds: 450),
+      curve: Curves.easeOutCubic,
+    );
+    if (!mounted) return;
     setState(() {
       _progress = 1.0;
       _currentTask = 'Analysis complete! ✓';
@@ -228,7 +250,7 @@ class _ProcessingScreenState extends State<ProcessingScreen>
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _progressController.dispose();
     _pulseController.dispose();
     _rotateController.dispose();
     _typingController.dispose();

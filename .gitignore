@@ -32,6 +32,12 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+archive/
+android/build/
+/android/build/
+.gradle/
+**/build/
+
 
 # Symbolication related
 app.*.symbols

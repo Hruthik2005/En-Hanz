@@ -14,7 +14,7 @@ class _IQTestScreenState extends State<IQTestScreen>
     with SingleTickerProviderStateMixin {
   int _currentQuestion = 0;
   int _score = 0;
-  String? _selectedAnswer;
+  int? _selectedAnswerIndex;
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -25,9 +25,9 @@ class _IQTestScreenState extends State<IQTestScreen>
   final List<Map<String, dynamic>> _questions_5_7 = [
     {
       'question': 'What comes next in the pattern?',
-      'pattern': ' �  � � ❓',
-      'options': ['�', '�', '�', '�'],
-      'correct': '�',
+      'pattern': '🔴 🟡 🔴 🟡 ❓',
+      'options': ['🔴', '🟡', '🟢', '🔵'],
+      'correct': '🟡',
       'explanation': 'Alternating color pattern (red, yellow, red, yellow).',
     },
     {
@@ -194,7 +194,7 @@ class _IQTestScreenState extends State<IQTestScreen>
   }
 
   void _nextQuestion() {
-    if (_selectedAnswer == null) {
+    if (_selectedAnswerIndex == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please select an answer', style: GoogleFonts.inter()),
@@ -210,14 +210,15 @@ class _IQTestScreenState extends State<IQTestScreen>
     }
 
     // Check if answer is correct
-    if (_selectedAnswer == _questions[_currentQuestion]['correct']) {
+    final selectedOption = _questions[_currentQuestion]['options'][_selectedAnswerIndex!];
+    if (selectedOption == _questions[_currentQuestion]['correct']) {
       _score += 10;
     }
 
     if (_currentQuestion < _questions.length - 1) {
       setState(() {
         _currentQuestion++;
-        _selectedAnswer = null;
+        _selectedAnswerIndex = null;
       });
       _animController.reset();
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -781,12 +782,12 @@ class _IQTestScreenState extends State<IQTestScreen>
                                 question['options'].length,
                                 (index) {
                                   final option = question['options'][index];
-                                  final isSelected = _selectedAnswer == option;
+                                  final isSelected = _selectedAnswerIndex == index;
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 12),
                                     child: InkWell(
                                       onTap: () => setState(
-                                        () => _selectedAnswer = option,
+                                        () => _selectedAnswerIndex = index,
                                       ),
                                       borderRadius: BorderRadius.circular(18),
                                       splashColor: Color(

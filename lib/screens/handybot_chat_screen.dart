@@ -555,6 +555,11 @@ class _HandyBotChatScreenState extends State<HandyBotChatScreen>
               );
             },
           ),
+            IconButton(
+              icon: const Icon(Icons.mic_rounded, color: Color(0xFF1565C0)),
+              tooltip: 'Voice chat',
+              onPressed: () => Navigator.pushNamed(context, '/handibot-voice'),
+            ),
           IconButton(
             icon: Icon(Icons.home_rounded, color: Color(0xFF1565C0)),
             onPressed: () => Navigator.pushNamedAndRemoveUntil(
